@@ -20,6 +20,7 @@
 :root { color-scheme: light; }
 html { scroll-behavior: smooth; background: #f5eddc; }
 body { margin: 0; color: #173324; background: #fffdf7; font-family: var(--font-sans); }
+[id] { scroll-margin-top: 5.25rem; }
 ::selection { background: #d2aa61; color: #0d2118; }
 a { text-underline-offset: .22em; }
 

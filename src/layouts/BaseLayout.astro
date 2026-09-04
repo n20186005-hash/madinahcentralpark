@@ -30,12 +30,20 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="application-name" content="حديقة الملك فهد المركزية" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="حديقة الملك فهد المركزية" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ar_SA" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {absolutePageUrl && <meta property="og:url" content={absolutePageUrl} />}
     {absoluteImageUrl && <meta property="og:image" content={absoluteImageUrl} />}
+    <meta property="og:image:alt" content="المساحات الخضراء والأشجار في حديقة الملك فهد المركزية بالمدينة المنورة" />
+    {absoluteImageUrl && <meta name="twitter:image" content={absoluteImageUrl} />}
     <meta name="twitter:card" content="summary_large_image" />
     {ldItems.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)}></script>)}
     <script is:inline>
@@ -60,5 +68,12 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <Header />
     <main><slot /></main>
     <Footer />
+    <script is:inline>
+      if ('serviceWorker' in navigator && location.protocol === 'https:' && !location.hostname.startsWith('localhost')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>

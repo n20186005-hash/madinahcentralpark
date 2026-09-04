@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../dist/', import.meta.url));
-const banned = ['exam' + 'ple.com', 'local' + 'host', 'chrome-' + 'extension://'];
+// نحظر العناوين المكتوبة فعلاً فقط (وليس مجرد ذكر استثناء localhost في كود تسجيل عامل الخدمة).
+const banned = ['exam' + 'ple.com', 'http://local' + 'host', 'https://local' + 'host', 'local' + 'host:', '127.0.0.1', 'chrome-' + 'extension://'];
 
 async function walk(dir) {
   const out = [];
@@ -36,7 +37,7 @@ for (const file of sitemapFiles) {
     console.error(`lastmod غير مطلوب: ${file}`);
     bad = true;
   }
-  if (new RegExp(['exam' + 'ple\\.com', 'local' + 'host'].join('|'), 'i').test(text)) {
+  if (new RegExp(['exam' + 'ple\\.com', '(https?:)?//local' + 'host', 'local' + 'host:'].join('|'), 'i').test(text)) {
     console.error(`عنوان غير صالح في sitemap: ${file}`);
     bad = true;
   }

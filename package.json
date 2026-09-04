@@ -12,6 +12,7 @@
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro build && node scripts/verify-dist.mjs",
+    "verify:content": "node scripts/verify-content.mjs",
     "preview": "astro preview",
     "deploy": "pnpm build && pnpm dlx wrangler@4.127.1 deploy"
   },

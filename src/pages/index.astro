@@ -1,5 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import FacilitiesSection from '../components/FacilitiesSection.astro';
+import Weather from '../components/Weather.astro';
+import HistorySection from '../components/HistorySection.astro';
+import ExperienceSection from '../components/ExperienceSection.astro';
 
 const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
 const heroUrl = Astro.site ? new URL('/images/king-fahd-central-park-hero.jpg', Astro.site).href : undefined;
@@ -12,7 +16,13 @@ const faqs = [
   ['هل تتوفر مواقف للسيارات؟', 'نعم. تذكر أمانة منطقة المدينة المنورة وجود ثمانية مواقف رئيسية بمساحة إجمالية تقارب عشرين ألف متر مربع، إضافة إلى مواقف طولية مرتبطة بمشروع تطوير الحديقة.'],
   ['كم من الوقت أحتاج لزيارة الحديقة؟', 'للتنزه الهادئ ومشاهدة أبرز المساحات الخضراء والبحيرة والممرات، يناسب معظم الزوار تخصيص نحو ساعتين إلى ثلاث ساعات. قد تحتاج مدة أطول عند حضور فعالية أو تناول الطعام داخل المنطقة.'],
   ['هل الحديقة مناسبة للعائلات والأطفال؟', 'تصف الجهات المحلية الحديقة كوجهة اجتماعية وعائلية، وتذكر وجود مناطق لعب للأطفال ومسارات للمشي والجري وركوب الدراجات ومساحات جلوس ومرافق ترفيهية وثقافية.'],
-  ['ما أفضل وقت للزيارة؟', 'المساء وما بعد انخفاض حرارة الشمس غالباً هو الوقت الأكثر راحة للمشي والجلوس في الهواء الطلق، وهو أيضاً متسق مع ساعات الزيارة المسائية المنشورة. في الأيام المزدحمة يُفضّل الوصول مبكراً.']
+  ['ما أفضل وقت للزيارة؟', 'المساء وما بعد انخفاض حرارة الشمس غالباً هو الوقت الأكثر راحة للمشي والجلوس في الهواء الطلق، وهو أيضاً متسق مع ساعات الزيارة المسائية المنشورة. في الأيام المزدحمة يُفضّل الوصول مبكراً.'],
+  ['هل توجد داخل الحديقة مساحات للجلوس والاستراحة؟', 'تذكر المصادر المحلية وجود جلسات ومساحات استراحة موزعة على أرجاء الحديقة، إضافة إلى ممرات واسعة. في المواسم والفعاليات قد تشهد المساحات الأقرب للفعاليات ازدحاماً أكبر.'],
+  ['هل يمكن ممارسة الرياضة داخل الحديقة؟', 'تُذكر في مصادر الأمانة مسارات للمشي والجري وركوب الدراجات، ومساحات رياضية ولياقة وترفيه. يُنصح بالالتزام بممرات الدراجات المخصصة ولوحات التوجيه ومراعاة المشاة والعائلات.'],
+  ['هل الحديقة ملائمة لذوي الإعاقة وكبار السن؟', 'توفر الأرصفة والممرات الواسعة عموماً سهولة نسبية للتنقل، لكن المصادر المتاحة لا تحدد تفاصيل تأكيدية عن مرافق خاصة بذوي الإعاقة. يُنصح بالتحقق من المداخل والمرافق لدى الجهة الرسمية أو من الموقع الفعلي قبل الزيارة.'],
+  ['هل تتوفر مياه شرب أو أماكن وضوء داخل الحديقة؟', 'لا يثبت هذا الدليل مواقع ثابتة لمياه الشرب أو الوضوء داخل الحديقة. المساجد في الأحياء المجاورة توفر عادةً مرافق الوضوء، ويُفضَّل إحضار مياه خاصة في الأيام الحارة.'],
+  ['كم تبعد الحديقة عن المسجد النبوي والأماكن المجاورة؟', 'تشير المصادر المحلية إلى أن الحديقة تقع على بُعد نحو خمسة كيلومترات جنوب المسجد النبوي، وقريبة من مسجد قباء وبستان المستظل وجادة قباء، ويمكن الوصول إليها بالسيارة أو تطبيقات النقل.'],
+  ['متى تنشط الفعاليات في الحديقة؟', 'عادةً ما تشهد عطلات نهاية الأسبوع والمواسم والمناسبات (ومنها رمضان والأعياد) نشاطاً أكبر من الفعاليات والبرامج. تابع الحسابات والمنصات الرسمية للأمانة والجهات المنظمة للتعرف على المواعيد المحدثة.']
 ];
 
 const attractionSchema = {
@@ -28,6 +38,7 @@ const attractionSchema = {
     '@type': 'PostalAddress',
     streetAddress: 'حي الحديقة',
     addressLocality: 'المدينة المنورة',
+    addressRegion: 'منطقة المدينة المنورة',
     postalCode: '42383',
     addressCountry: 'SA'
   },
@@ -41,6 +52,14 @@ const attractionSchema = {
     name: 'منطقة المدينة المنورة'
   },
   hasMap: 'https://maps.app.goo.gl/o2EdMT6dC5qwHHun7',
+  isAccessibleForFree: true,
+  publicAccess: true,
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'مواقف سيارات رئيسية', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'مناطق ألعاب أطفال', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'ممرات مشي وجري ودراجات', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'مساحات جلوس واستراحة', value: true }
+  ],
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: 4.2,
@@ -57,7 +76,8 @@ const attractionSchema = {
   sameAs: [
     'https://maps.app.goo.gl/o2EdMT6dC5qwHHun7',
     'https://visitmadinahsa.com/sa-ar/destinations/حديقة-الملك-فهد',
-    'https://www.amana-md.gov.sa/NewsCenter/Details/2396'
+    'https://www.amana-md.gov.sa/NewsCenter/Details/2396',
+    'https://www.visitsaudi.com/ar'
   ]
 };
 
@@ -70,11 +90,58 @@ const faqSchema = {
     acceptedAnswer: { '@type': 'Answer', text: answer }
   }))
 };
+
+const pageTitle = 'حديقة الملك فهد المركزية | دليل الزائر في المدينة المنورة';
+const pageDesc = 'دليل عربي مستقل لحديقة الملك فهد المركزية في المدينة المنورة: الموقع وأوقات الزيارة والمواقف والمرافق والخدمات، حالة الطقس وتوقعات الأيام، خلفية المكان وتطوره، الأماكن القريبة، خريطة Google والأسئلة الشائعة.';
+const pageDate = '2026-09-04';
+
+const graphSchema = siteUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': `${siteUrl}#organization`,
+          name: 'دليل حديقة الملك فهد المركزية',
+          url: siteUrl,
+          logo: {
+            '@type': 'ImageObject',
+            '@id': `${siteUrl}#organization-logo`,
+            url: new URL('/favicon.svg', Astro.site).href,
+            width: 64,
+            height: 64
+          }
+        },
+        {
+          '@type': 'WebSite',
+          '@id': `${siteUrl}#website`,
+          url: siteUrl,
+          name: 'دليل حديقة الملك فهد المركزية – المدينة المنورة',
+          inLanguage: 'ar-SA',
+          publisher: { '@id': `${siteUrl}#organization` },
+          about: { '@id': entityId }
+        },
+        {
+          '@type': 'WebPage',
+          '@id': `${siteUrl}#webpage`,
+          url: siteUrl,
+          name: pageTitle,
+          description: pageDesc,
+          inLanguage: 'ar-SA',
+          isPartOf: { '@id': `${siteUrl}#website` },
+          about: { '@id': entityId },
+          primaryImageOfPage: { '@type': 'ImageObject', '@id': `${siteUrl}#hero-image`, url: heroUrl },
+          datePublished: pageDate,
+          dateModified: pageDate
+        }
+      ]
+    }
+  : undefined;
 ---
 <BaseLayout
-  title="حديقة الملك فهد المركزية | دليل الزائر في المدينة المنورة"
-  description="دليل عربي مستقل لحديقة الملك فهد المركزية في المدينة المنورة: الموقع، أوقات الزيارة، المواقف، المسارات، المرافق، الطعام القريب، الأماكن المجاورة، خريطة Google والأسئلة الشائعة."
-  jsonLd={[attractionSchema, faqSchema]}
+  title={pageTitle}
+  description={pageDesc}
+  jsonLd={[attractionSchema, faqSchema, ...(graphSchema ? [graphSchema] : [])]}
 >
   <section class="relative isolate overflow-hidden bg-night-950 text-white">
     <div class="absolute inset-0">
@@ -88,7 +155,7 @@ const faqSchema = {
     <div class="relative mx-auto grid min-h-[76vh] max-w-7xl items-end gap-8 px-5 pb-16 pt-28 lg:grid-cols-[1.1fr_.55fr] lg:px-8 lg:pb-24">
       <div>
         <p class="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-black backdrop-blur">حي الحديقة · المدينة المنورة · المملكة العربية السعودية</p>
-        <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">حديقة الملك فهد المركزية</h1>
+        <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">حديقة الملك فهد المركزية <span class="mt-3 block text-3xl font-black leading-snug text-gold-400 sm:text-4xl">المدينة المنورة · المملكة العربية السعودية</span></h1>
         <p class="mt-6 max-w-3xl text-xl leading-10 text-sand-100/92">واحة حضرية واسعة تجمع الأشجار والظلال ومسارات الحركة والمرافق العائلية والثقافية، على مسافة تقارب خمسة كيلومترات جنوب المسجد النبوي.</p>
         <div class="mt-7 flex flex-wrap gap-3 text-sm font-black">
           <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">★ 4.2 · 25,536 تقييماً</span>
@@ -147,6 +214,10 @@ const faqSchema = {
     </div>
   </section>
 
+  <FacilitiesSection />
+
+  <Weather />
+
   <section id="الوصول" class="bg-palm-900 py-16 text-white lg:py-24">
     <div class="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-[.75fr_1.15fr] lg:px-8">
       <div>
@@ -178,14 +249,14 @@ const faqSchema = {
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <div class="grid gap-10 lg:grid-cols-2">
         <div>
-          <p class="text-sm font-black text-gold-600">خيارات طعام قريبة</p>
-          <h2 class="mt-3 text-3xl font-black text-palm-900 sm:text-4xl">مطاعم ضمن نطاق قريب</h2>
-          <p class="mt-4 text-sm leading-7 text-palm-900/65">هذه أسماء أماكن قريبة ظهرت في البحث الجغرافي، وليست توصيات تجارية أو إعلانات. راجع القائمة والساعات والأسعار الحالية قبل الزيارة.</p>
+          <p class="text-sm font-black text-gold-600">خيارات الطعام والقهوة</p>
+          <h2 class="mt-3 text-3xl font-black text-palm-900 sm:text-4xl">أنواع خيارات الطعام في نطاق قريب</h2>
+          <p class="mt-4 text-sm leading-7 text-palm-900/65">نكتفي بذكر أنواع الخدمات من دون أسماء محلات، لأن قوائم الأعمال وساعات العمل تتغير، ولأن هذا الدليل المستقل لا يقدم توصيات تجارية أو إعلانات.</p>
           <div class="mt-7 grid gap-4 sm:grid-cols-2">
-            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">مطعم شيف إياد</h3><p class="mt-2 text-sm text-palm-900/60">خيار طعام قريب في حي الحديقة، على مسافة تقل عن كيلومتر تقريباً.</p></article>
-            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">فيردان</h3><p class="mt-2 text-sm text-palm-900/60">مطعم قريب ضمن نطاق يقارب كيلومتراً من موقع الحديقة.</p></article>
-            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">مطعم زمان ستي</h3><p class="mt-2 text-sm text-palm-900/60">من الخيارات القريبة جنوب وشرق نطاق الحديقة تقريباً.</p></article>
-            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">مطعم قصر الريحان</h3><p class="mt-2 text-sm text-palm-900/60">خيار قريب آخر ضمن مسافة تقارب كيلومتراً بحسب البحث الجغرافي.</p></article>
+            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">مطاعم عائلية</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">جلسات عائلية وقاعات مناسبات ضمن الأحياء المجاورة للحديقة.</p></article>
+            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">مقاهٍ ومشروبات</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مقاهٍ ومشروبات ساخنة وباردة داخل النطاق القريب؛ تحقق من توفرها ذلك اليوم.</p></article>
+            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">وجبات سريعة ومطابخ شعبية</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">خيارات سريعة قرب محاور الطرق المؤدية إلى الحي، تختلف من حيث النوع والقرب.</p></article>
+            <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black">حلويات ومخابز</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">لمن يرغب في استكمال نزهته؛ وتتوفر عادةً في النطاق السكني والتجاري المحيط.</p></article>
           </div>
         </div>
         <div>
@@ -202,20 +273,40 @@ const faqSchema = {
     </div>
   </section>
 
+  <HistorySection />
+
+  <ExperienceSection />
+
   <section class="bg-white py-16 lg:py-24">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="grid gap-5 lg:grid-cols-3">
+      <div class="max-w-3xl">
+        <p class="text-sm font-black text-gold-600">لقطات من الحديقة</p>
+        <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">صور تعبّر عن أجواء المكان</h2>
+      </div>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
-          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة المساحات الخضراء</span></div><img src="/images/king-fahd-central-park-greenery.jpg" alt="أشجار ومساحات خضراء في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
-          <div class="p-5"><h3 class="font-black">الأشجار والظلال</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مساحات مناسبة للتنزه الهادئ والجلوس بعيداً عن حركة الطرق الرئيسية.</p></div>
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة المساحات الخضراء</span></div><img src="/images/king-fahd-central-park-hero.jpg" alt="مساحات خضراء وأشجار في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">الأشجار والمسطحات</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مساحات خضراء مناسبة للتنزه الهادئ والجلوس العائلي بعيداً عن حركة الطرق الرئيسية.</p></div>
         </article>
         <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
-          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة البحيرة والمرافق</span></div><img src="/images/king-fahd-central-park-lake.jpg" alt="البحيرة والمرافق داخل حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
-          <div class="p-5"><h3 class="font-black">البحيرة والمرافق</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">تذكر المصادر البلدية بحيرة اصطناعية ومرافق متنوعة ضمن نطاق الحديقة.</p></div>
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة نافورة داخل الحديقة</span></div><img src="/images/king-fahd-central-park-fountain.jpg" alt="نوافير وعناصر مائية في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">العناصر المائية</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">نوافير وعناصر مائية تسهم في تلطيف الأجواء وتزيين المسارات داخل الحديقة.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة منطقة ألعاب الأطفال</span></div><img src="/images/king-fahd-central-park-playground.jpg" alt="منطقة ألعاب مخصصة للأطفال في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">مناطق ألعاب الأطفال</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مساحات مخصصة لهو الأطفال وإشرافهم، وتُذكر ضمن مرافق الحديقة في المصادر البلدية.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة الممشى ومسارات الحركة</span></div><img src="/images/king-fahd-central-park-walkway.jpg" alt="ممشى ومسار للمشاة داخل حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">الممشى ومسارات الحركة</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">ممرات مناسبة للمشي والجري وركوب الدراجات ضمن مرافق الحديقة المذكورة محلياً.</p></div>
         </article>
         <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
           <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة الحديقة في المساء</span></div><img src="/images/king-fahd-central-park-evening.jpg" alt="أجواء المساء في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
-          <div class="p-5"><h3 class="font-black">أجواء المساء</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">وقت مناسب للمشي العائلي عندما تنخفض حرارة النهار.</p></div>
+          <div class="p-5"><h3 class="font-black">أجواء المساء</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">وقت مناسب للمشي العائلي عندما تنخفض حرارة النهار وتضاء المسارات.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة مدخل الحديقة</span></div><img src="/images/king-fahd-central-park-entrance.jpg" alt="مدخل حديقة الملك فهد المركزية في المدينة المنورة" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">مداخل الحديقة</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مداخل رئيسية في حي الحديقة تؤدي إلى المسطحات والمرافق الداخلية، وترتبط بالمواقف القريبة.</p></div>
         </article>
       </div>
     </div>
@@ -242,11 +333,13 @@ const faqSchema = {
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <div class="grid gap-8 lg:grid-cols-[.7fr_1.3fr]">
         <div><p class="text-sm font-black text-gold-600">الربط بالجهات الرسمية</p><h2 class="mt-3 text-3xl font-black text-palm-900">مصادر مرجعية موثوقة</h2></div>
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <a href="https://www.amana-md.gov.sa/NewsCenter/Details/2396" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">أمانة منطقة المدينة المنورة</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">معلومات الحديقة ومرافقها ومواقفها وتطويرها.</span></a>
+          <a href="https://www.amana-md.gov.sa/NewsCenter/Details/1064" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">أمانة المنطقة — المشاريع البلدية</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">إعلان حزمة مشاريع شملت تطوير حديقة الملك فهد المركزية (1444هـ).</span></a>
           <a href="https://visitmadinahsa.com/sa-ar/destinations/حديقة-الملك-فهد" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">منصة المدينة</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">وجهة حديقة الملك فهد ضمن محتوى هيئة تطوير منطقة المدينة المنورة.</span></a>
           <a href="https://www.visitsaudi.com/ar" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">روح السعودية</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">البوابة الوطنية للسياحة في المملكة العربية السعودية.</span></a>
         </div>
+        <p class="mt-6 text-xs leading-6 text-palm-900/55">بيانات الطقس مصدرها خدمة Open-Meteo المفتوحة وتُجلب من الخادم وقت بناء الصفحة. تُعرض قوائم الخدمات الواردة في هذا الدليل كنوع فقط من دون أسماء منشآت. تفاصيل حقوق الصور في تذييل الموقع.</p>
       </div>
     </div>
   </section>

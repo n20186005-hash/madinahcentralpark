@@ -1,0 +1,144 @@
+---
+// حالة الطقس: تُجلب من خدمة Open-Meteo المجانية (بدون مفتاح) من جهة الخادم وقت إنشاء الصفحة،
+// وتُخزَّن داخل ملف HTML الثابت، فلا يُطلق المتصفح أي طلب بيانات من طرف ثالث.
+const LAT = '24.4200407';
+const LON = '39.6036003';
+const API = 'https://api.open-meteo.com/v1/forecast';
+
+const params = new URLSearchParams({
+  latitude: LAT,
+  longitude: LON,
+  current: 'temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m',
+  daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+  timezone: 'Asia/Riyadh',
+  forecast_days: '6',
+  wind_speed_unit: 'kmh'
+});
+
+let payload: any = null;
+let loadError = false;
+try {
+  const response = await fetch(`${API}?${params}`, { signal: AbortSignal.timeout(9000) });
+  if (response.ok) payload = await response.json();
+  else loadError = true;
+} catch {
+  loadError = true;
+}
+
+const ok = !loadError && payload?.current?.temperature_2m != null && Array.isArray(payload?.daily?.time);
+
+const WMO: Record<number, { text: string; icon: string }> = {
+  0: { text: 'صحو', icon: '☀️' },
+  1: { text: 'صحو غالباً', icon: '🌤️' },
+  2: { text: 'غائم جزئياً', icon: '⛅' },
+  3: { text: 'غائم', icon: '☁️' },
+  45: { text: 'ضباب', icon: '🌫️' },
+  48: { text: 'ضباب متجمد', icon: '🌫️' },
+  51: { text: 'رذاذ خفيف', icon: '🌦️' },
+  53: { text: 'رذاذ متفرق', icon: '🌦️' },
+  55: { text: 'رذاذ كثيف', icon: '🌧️' },
+  56: { text: 'رذاذ متجمد', icon: '🌧️' },
+  57: { text: 'رذاذ متجمد كثيف', icon: '🌧️' },
+  61: { text: 'مطر خفيف', icon: '🌧️' },
+  63: { text: 'مطر', icon: '🌧️' },
+  65: { text: 'مطر غزير', icon: '🌧️' },
+  66: { text: 'مطر متجمد', icon: '🌧️' },
+  67: { text: 'مطر متجمد غزير', icon: '🌧️' },
+  71: { text: 'ثلوج خفيفة', icon: '🌨️' },
+  73: { text: 'ثلوج', icon: '🌨️' },
+  75: { text: 'ثلوج كثيفة', icon: '❄️' },
+  77: { text: 'حبيبات ثلجية', icon: '❄️' },
+  80: { text: 'زخات مطر', icon: '🌦️' },
+  81: { text: 'زخات مطر قوية', icon: '🌧️' },
+  82: { text: 'زخات مطر عنيفة', icon: '⛈️' },
+  85: { text: 'زخات ثلج', icon: '🌨️' },
+  86: { text: 'زخات ثلج كثيفة', icon: '❄️' },
+  95: { text: 'عاصفة رعدية', icon: '⛈️' },
+  96: { text: 'عاصفة رعدية مع برد', icon: '⛈️' },
+  99: { text: 'عاصفة رعدية شديدة مع برد', icon: '⛈️' }
+};
+
+function wmoInfo(code: number | null | undefined) {
+  return code != null && WMO[code] ? WMO[code] : { text: 'حالة غير محددة', icon: '🌡️' };
+}
+
+const dayNames = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+
+function arabicLabel(isoDate: string) {
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const day = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return `${dayNames[day]} · ${d} ${monthNames[m - 1]}`;
+}
+
+const current = ok ? payload.current : null;
+const daily = ok ? payload.daily : null;
+const today = daily?.time?.[0];
+const currentWmo = current ? wmoInfo(current.weather_code) : null;
+---
+
+<section id="الطقس" class="bg-white py-16 lg:py-24">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="max-w-3xl">
+      <p class="text-sm font-black text-gold-600">حالة الطقس قرب الحديقة</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">الطقس الآن وأقرب ستة أيام</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">تناسب ليلة المدينة ودرجات الحرارة بعد غروب الشمس معظم أشهر السنة، بينما يتطلب النهار في الصيف الانتباه لشدة الحرارة والرطوبة المنخفضة عادةً.</p>
+    </div>
+
+    {
+      !ok ? (
+        <div class="mt-10 rounded-[2rem] border border-palm-900/10 bg-sand-50 p-8 text-sm leading-8 text-palm-900/68">
+          تعذّر جلب بيانات الطقس وقت إنشاء هذه الصفحة. يمكنك الاطلاع على الحالة الراهنة من تطبيقات الطقس أو خدمة الخرائط قبل التوجه إلى الحديقة.
+        </div>
+      ) : (
+        <div class="mt-10 grid gap-6 lg:grid-cols-[.85fr_1.15fr]">
+          <article class="rounded-[2rem] bg-palm-900 p-7 text-white lg:p-9">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-sm font-black text-gold-400">حالة الطقس الآن</p>
+                <p class="mt-2 text-sm text-white/70">{today ? (arabicLabel(today) + ' — المدينة المنورة') : 'المدينة المنورة'}</p>
+                <p class="mt-5 text-6xl font-black tracking-tight" dir="ltr">{Math.round(current.temperature_2m)}°<span dir="rtl" class="align-top text-3xl text-gold-400">م</span></p>
+                <p class="mt-3 flex items-center gap-2 text-xl font-black"><span aria-hidden="true">{currentWmo!.icon}</span>{currentWmo!.text}</p>
+              </div>
+              <div class="text-7xl leading-none" aria-hidden="true">{currentWmo!.icon}</div>
+            </div>
+            <dl class="mt-7 grid grid-cols-3 gap-3 border-t border-white/15 pt-6 text-center text-sm">
+              <div><dt class="text-white/60">الإحساس</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.apparent_temperature)}°</dd></div>
+              <div><dt class="text-white/60">الرطوبة</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.relative_humidity_2m)}٪</dd></div>
+              <div><dt class="text-white/60">الرياح</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.wind_speed_10m)}</dd></div>
+            </dl>
+            <p class="mt-6 text-xs leading-6 text-white/55">قراءات محطة قريبة عبر خدمة Open-Meteo المجانية؛ تُعرض كما وردت وقد تختلف قليلاً على أرض الحديقة نفسها.</p>
+          </article>
+
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+            {
+              daily.time.map((day: string, index: number) => {
+                const info = wmoInfo(daily.weather_code?.[index]);
+                const max = Math.round(daily.temperature_2m_max?.[index] ?? 0);
+                const min = Math.round(daily.temperature_2m_min?.[index] ?? 0);
+                const rain = daily.precipitation_probability_max?.[index];
+                return (
+                  <article class={'rounded-3xl border p-5 ' + (index === 0 ? 'border-gold-400/50 bg-gold-400/10 ring-1 ring-gold-400/30' : 'border-palm-900/10 bg-sand-50')}>
+                    <div class="flex items-center justify-between gap-3">
+                      <h3 class="text-sm font-black text-palm-900">{index === 0 ? 'اليوم' : arabicLabel(day)}</h3>
+                      <span class="text-2xl" aria-hidden="true">{info.icon}</span>
+                    </div>
+                    <p class="mt-2 text-sm font-bold text-palm-900/70">{info.text}</p>
+                    <p class="mt-3 text-2xl font-black" dir="ltr">{max}° <span class="text-base font-bold text-palm-900/50">{min}°</span></p>
+                    <p class="mt-1 text-xs text-palm-900/55">{rain == null ? 'لا تتوفر تقديرات أمطار' : (rain > 0 ? `احتمال أمطار ${rain}٪` : 'احتمال أمطار ضئيل')}</p>
+                  </article>
+                );
+              })
+            }
+          </div>
+        </div>
+      )
+    }
+
+    <p class="mt-8 max-w-4xl text-xs leading-6 text-palm-900/50">
+      بيانات الطقس مصدرها Open-Meteo (خدمة تنبؤات مجانية ومفتوحة)، وتُجلب من جهة الخادم عند إنشاء الصفحة ثم تُخزَّن داخلها؛
+      أي أنها لا تُطلَب من جهازك ولا تخضع لخيارات ملفات تعريف الارتباط. في الصيف يُنصح بالزيارة بعد المغرب، وفي الشتاء والربيع
+      تكون الأجواء أوفر للتنزه نهاراً.
+    </p>
+  </div>
+</section>

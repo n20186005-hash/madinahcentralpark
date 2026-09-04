@@ -2,15 +2,15 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// عنوان الموقع له مصدر واحد فقط: حقل Astro `site` أدناه عبر هذا المتغير.
-// اتركه فارغاً قبل اعتماد النطاق الحقيقي؛ لن يتعطل البناء ولن يُنشأ sitemap.
+// النطاق الرسمي المعتمد: madinahcentralpark.com
+// يمكن تجاوزه مؤقتاً ببيئة PUBLIC_SITE_URL عند الحاجة.
 const configuredSite = (process.env.PUBLIC_SITE_URL ?? '').trim();
-const site = configuredSite || undefined;
+const site = configuredSite || 'https://madinahcentralpark.com';
 
 export default defineConfig({
   site,
   output: 'static',
-  integrations: site ? [sitemap()] : [],
+  integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()]
   }
