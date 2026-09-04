@@ -1,0 +1,23 @@
+---
+import Logo from './Logo.astro';
+---
+<footer class="border-t border-white/10 bg-night-950 text-sand-100">
+  <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+      <div>
+        <div class="inline-flex rounded-2xl bg-sand-50 p-2"><Logo compact={true} /></div>
+        <p class="mt-5 max-w-xl text-sm leading-8 text-sand-100/80">هذا الموقع مشروع إرشادي مستقل غير ربحي للزوار، ولا يتبع أي جهة حكومية أو منظمة رسمية.</p>
+        <div class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-black text-white">
+          <a href="/privacy-policy/">سياسة الخصوصية</a>
+          <a href="/terms/">شروط الخدمة</a>
+          <a href="/cookie-settings/">إعدادات ملفات تعريف الارتباط</a>
+        </div>
+      </div>
+      <div class="space-y-4 text-sm leading-8 text-sand-100/80">
+        <p>تستند معلومات الحديقة إلى مواد عامة تمت مقارنتها بما تنشره أمانة منطقة المدينة المنورة، وهيئة تطوير منطقة المدينة المنورة عبر منصة «المدينة»، والهيئة السعودية للسياحة عبر «روح السعودية». ولا تتضمن هذه الإشارات أي توصية تجارية مدفوعة.</p>
+        <p>حقوق الصور: جميع الصور المعروضة في الموقع تبقى حقوقها وحقوق نشرها للمصورين وأصحاب الحقوق الأصليين، مع بيان المصدر والترخيص عند الاقتضاء.</p>
+        <p>© 2026 دليل حديقة الملك فهد المركزية – المدينة المنورة. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="إعدادات ملفات تعريف الارتباط | دليل حديقة الملك فهد المركزية" description="إدارة موافقتك على ملفات تعريف الارتباط والتحليلات.">
+  <section class="bg-sand-50 py-16 lg:py-24">
+    <article class="prose-legal mx-auto max-w-3xl px-5 lg:px-8">
+      <p class="text-sm font-black text-gold-600">آخر تحديث: سبتمبر 2026</p>
+      <h1 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">إعدادات ملفات تعريف الارتباط</h1>
+      <p class="mt-6 text-lg">نستخدم الحد الأدنى من التخزين اللازم لتشغيل الموقع وحفظ اختياراتك. يمكنك إدارة تفضيلاتك مباشرة في هذه الصفحة، من دون نافذة منبثقة.</p>
+
+      <form id="cookie-form" class="mt-9 space-y-4" aria-describedby="save-status">
+        <div class="flex items-start justify-between gap-5 rounded-3xl border border-palm-900/10 bg-white p-5">
+          <div><strong class="block text-lg">ملفات ضرورية</strong><span class="mt-1 block text-sm text-palm-900/65">ضرورية لحفظ حالة الموافقة ووظائف الموقع الأساسية، ولا يمكن تعطيلها من هذه الواجهة.</span></div>
+          <label class="switch mt-1" aria-label="ملفات ضرورية مفعلة دائماً"><input type="checkbox" checked disabled /><span></span></label>
+        </div>
+
+        <div class="flex items-start justify-between gap-5 rounded-3xl border border-palm-900/10 bg-white p-5">
+          <div><strong class="block text-lg">ملفات التحليل</strong><span class="mt-1 block text-sm text-palm-900/65">تسمح بتحميل Google Analytics لفهم الاستخدام بصورة إجمالية. لا تُحمّل الأداة قبل موافقتك.</span></div>
+          <label class="switch mt-1" aria-label="تفعيل Google Analytics"><input id="analytics" type="checkbox" /><span></span></label>
+        </div>
+
+        <div class="flex items-start justify-between gap-5 rounded-3xl border border-palm-900/10 bg-white p-5">
+          <div><strong class="block text-lg">ملفات التفضيلات</strong><span class="mt-1 block text-sm text-palm-900/65">تحفظ إعداداتك المحلية، مثل خيارات ملفات تعريف الارتباط، على هذا المتصفح.</span></div>
+          <label class="switch mt-1" aria-label="تفعيل تفضيلات المستخدم"><input id="preferences" type="checkbox" /><span></span></label>
+        </div>
+
+        <div class="flex items-start justify-between gap-5 rounded-3xl border border-palm-900/10 bg-white p-5">
+          <div><strong class="block text-lg">ملفات التسويق</strong><span class="mt-1 block text-sm text-palm-900/65">لا يحمّل هذا المشروع حالياً أداة إعلانية أو نظام إعلانات مخصصة، ولذلك يبقى هذا الخيار متوقفاً.</span></div>
+          <label class="switch mt-1" aria-label="ملفات التسويق متوقفة"><input type="checkbox" disabled /><span></span></label>
+        </div>
+
+        <div class="flex flex-wrap gap-3 pt-3">
+          <button class="rounded-full bg-palm-900 px-5 py-3 font-black text-white" type="submit">حفظ التفضيلات</button>
+          <button id="reject" class="rounded-full border border-palm-900/20 bg-white px-5 py-3 font-black text-palm-900" type="button">رفض غير الضروري</button>
+        </div>
+        <p id="save-status" class="min-h-6 text-sm font-black text-palm-700" aria-live="polite"></p>
+      </form>
+
+      <h2>إدارة الموافقة</h2>
+      <p>يمكنك العودة إلى هذه الصفحة في أي وقت لتغيير اختياراتك. عند تعطيل التحليلات لن تُحمّل مكتبة Google Analytics في زيارات الصفحات اللاحقة. قد تحتاج إلى حذف ملفات طرف ثالث أنشئت سابقاً من إعدادات المتصفح إذا رغبت في إزالتها فوراً.</p>
+    </article>
+  </section>
+  <script is:inline>
+    (() => {
+      const KEY = 'king-fahad-central-park-consent-v1';
+      const form = document.getElementById('cookie-form');
+      const analytics = document.getElementById('analytics');
+      const preferences = document.getElementById('preferences');
+      const reject = document.getElementById('reject');
+      const status = document.getElementById('save-status');
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch {}
+      if (saved) {
+        analytics.checked = !!saved.analytics;
+        preferences.checked = !!saved.preferences;
+      }
+      const store = (data) => {
+        localStorage.setItem(KEY, JSON.stringify(data));
+        status.textContent = 'تم حفظ تفضيلاتك على هذا المتصفح.';
+      };
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const enableAnalytics = analytics.checked;
+        store({ necessary: true, analytics: enableAnalytics, preferences: preferences.checked, marketing: false });
+        if (enableAnalytics) location.reload();
+      });
+      reject.addEventListener('click', () => {
+        analytics.checked = false;
+        preferences.checked = false;
+        store({ necessary: true, analytics: false, preferences: false, marketing: false });
+      });
+    })();
+  </script>
+</BaseLayout>

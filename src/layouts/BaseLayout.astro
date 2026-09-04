@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  jsonLd?: unknown | unknown[];
+  noindex?: boolean;
+}
+
+const { title, description, image = '/images/king-fahd-central-park-hero.jpg', jsonLd, noindex = false } = Astro.props;
+const absolutePageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const absoluteImageUrl = Astro.site ? new URL(image, Astro.site).href : undefined;
+const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+---
+<!doctype html>
+<html lang="ar-SA" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#173324" />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,follow" />}
+    <title>{title}</title>
+    {absolutePageUrl && <link rel="canonical" href={absolutePageUrl} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_SA" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {absolutePageUrl && <meta property="og:url" content={absolutePageUrl} />}
+    {absoluteImageUrl && <meta property="og:image" content={absoluteImageUrl} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {ldItems.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)}></script>)}
+    <script is:inline>
+      (() => {
+        const KEY = 'king-fahad-central-park-consent-v1';
+        let consent = null;
+        try { consent = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch {}
+        if (!consent?.analytics || window.__kfcpGAStarted) return;
+        window.__kfcpGAStarted = true;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function(){ window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
+        document.head.appendChild(s);
+      })();
+    </script>
+  </head>
+  <body>
+    <Header />
+    <main><slot /></main>
+    <Footer />
+  </body>
+</html>
