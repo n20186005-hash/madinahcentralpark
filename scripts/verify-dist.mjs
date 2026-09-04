@@ -1,7 +1,8 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('../dist/', import.meta.url);
+const root = fileURLToPath(new URL('../dist/', import.meta.url));
 const banned = ['exam' + 'ple.com', 'local' + 'host', 'chrome-' + 'extension://'];
 
 async function walk(dir) {
