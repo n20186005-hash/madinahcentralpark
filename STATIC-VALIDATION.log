@@ -1,0 +1,19 @@
+فحوص المصدر المحلية:
+- package.json: إصدارات دقيقة فقط: ناجح
+- packageManager: pnpm@11.25.0: ناجح
+- engines.node: 24.20.0: ناجح
+- pnpm-lock.yaml importer يطابق package.json: ناجح
+- pnpm-workspace.yaml: غير موجود
+- CJK/Han داخل src: لا نتائج
+- remote <img> أو CSS image hotlink: لا نتائج
+- example.com / localhost / chrome-extension:// في المصدر: لا نتائج
+- node --check scripts/verify-dist.mjs: ناجح
+
+فحص التثبيت النظيف:
+- CI=1 corepack pnpm install --frozen-lockfile: لم يكتمل بسبب EAI_AGAIN إلى registry.npmjs.org في بيئة التنفيذ.
+- pnpm check: لم يُنفذ لأن مدير الحزم لم يمكن تنزيله.
+- pnpm build: لم يُنفذ للسبب نفسه.
+
+الصور:
+- مصدر صورة حقيقية CC BY-SA 4.0 موثق في public/images/PHOTO-CREDITS.md.
+- تنزيل JPG الثنائي محظور بواسطة شبكة الحاوية؛ لذلك لا توجد ملفات JPG حقيقية داخل الحزمة الحالية.
