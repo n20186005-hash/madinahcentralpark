@@ -10,7 +10,7 @@ const site = configuredSite || 'https://madinahcentralpark.com';
 export default defineConfig({
   site,
   output: 'static',
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !/(cookie-settings|terms|privacy-policy)\/?$/.test(page) })],
   vite: {
     plugins: [tailwindcss()]
   }

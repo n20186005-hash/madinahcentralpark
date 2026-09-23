@@ -1,0 +1,93 @@
+---
+// خطط زيارة مخصّصة حسب نوع الزائر + مسار عام نصف يوم / يوم كامل.
+const byCrowd = [
+  {
+    icon: '👨‍👩‍👧‍👦',
+    title: 'عائلة مع أطفال',
+    duration: '3–4 ساعات',
+    steps: [
+      'ابدأ من أحد المواقف الرئيسية واتجه إلى مناطق ألعاب الأطفال المخصصة مع إشراف مباشر.',
+      'جولة هادئة على الممشى وسط المسطحات الخضراء، مع توقف عند الجلسات المظللة للراحة.',
+      'زیارة البحيرة الاصطناعية من بعيد للاستراحة والتقاط الصور، مع البقاء خارج حافة الماء.',
+      'أنهِ اليوم بوجبة خفيفة في نطاق الخدمات القريب، وراقب ساعات الإغلاق المسائية.'
+    ]
+  },
+  {
+    icon: '📸',
+    title: 'مصورون وطبيعة',
+    duration: '2–3 ساعات',
+    steps: [
+      'احرص على الوصول قبيل الغروب للإضاءة الذهبية عند البحيرة والمداخل ذات الخلفية الخضراء.',
+      'وثّق الممشى مع الإنارة المسائية، وسوق العينية والحي التراثي أثناء الفعاليات.',
+      'احترم خصوصية العائلات عند التصوير؛ التقط اللقطات من زوايا لا تقتحم الجلسات.',
+      'جرّب صوراً من زاوية منخفضة للمسطحات الخضراء تعكس اتساع المكان.'
+    ]
+  },
+  {
+    icon: '♿',
+    title: 'كبار السن / ذوو احتياجات خاصة',
+    duration: '1.5–2 ساعة',
+    steps: [
+      'اختر مدخلاً قريباً من موقف رئيسي لتقليل المشي، واستفد من الأرصفة والممرات الواسعة.',
+      'سر في حلقة قصيرة مظللة تربط الجلسات والمسطحات دون صعود أو مسارات وعرة.',
+      'راعِ دورات المياه والمظلات، وخذ فترات راحة منتظمة خاصة في الأيام الأكثر حرارة.',
+      'تحقق مسبقاً من المداخل والمرافق المناسبة لذوي الاحتياجات عبر القناة الرسمية.'
+    ]
+  }
+];
+
+const general = [
+  {
+    icon: '⏳',
+    title: 'مسار نصف يوم',
+    duration: 'نحو 3 ساعات',
+    body: 'موقف رئيسي ← منطقة الألعاب ← الممشى والبحيرة ← جلسة استراحة ← خدمات الطعام القريبة. مناسب لزيارة هادئة دون استعجال.'
+  },
+  {
+    icon: '🗓️',
+    title: 'مسار يوم كامل',
+    duration: 'نحو 6 ساعات',
+    body: 'وصول عصراً ← جولة المسطحات والممشى ← فعالية أو سوق العينية والحي التراثي ← عشاء في النطاق القريب ← مشي مسائي مع الإنارة. يدمج الطبيعة والثقافة والراحة.'
+  }
+];
+---
+<section id="خطط-حسب-الفئة" class="bg-sand-50 py-16 lg:py-24">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="max-w-3xl">
+      <p class="text-sm font-black text-gold-600">خطط حسب نوع زوارك</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">مسارات مقترحة لكل فئة</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">ثلاثة مسارات موجّهة لاحتياجات مختلفة، يليها مساران عامّان حسب الوقت المتاح لزيارتك.</p>
+    </div>
+
+    <div class="mt-10 grid gap-5 md:grid-cols-3">
+      {byCrowd.map((c) => (
+        <article class="rounded-[2rem] border border-palm-900/10 bg-white p-6">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="flex items-center gap-2 text-xl font-black text-palm-900"><span aria-hidden="true">{c.icon}</span>{c.title}</h3>
+            <span class="rounded-full bg-palm-900 px-3 py-1 text-[11px] font-black text-white">{c.duration}</span>
+          </div>
+          <ol class="mt-5 space-y-3">
+            {c.steps.map((s, i) => (
+              <li class="flex gap-3 text-sm leading-7 text-palm-900/72"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gold-400 text-xs font-black text-night-950">{i + 1}</span><span>{s}</span></li>
+            ))}
+          </ol>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-6 grid gap-5 md:grid-cols-2">
+      {general.map((g) => (
+        <article class="flex items-start gap-4 rounded-[2rem] bg-palm-900 p-6 text-white">
+          <span class="text-3xl" aria-hidden="true">{g.icon}</span>
+          <div>
+            <div class="flex items-center gap-3">
+              <h3 class="text-xl font-black">{g.title}</h3>
+              <span class="rounded-full bg-white/15 px-3 py-1 text-[11px] font-black">{g.duration}</span>
+            </div>
+            <p class="mt-3 text-sm leading-8 text-white/80">{g.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

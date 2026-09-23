@@ -4,6 +4,10 @@ import FacilitiesSection from '../components/FacilitiesSection.astro';
 import Weather from '../components/Weather.astro';
 import HistorySection from '../components/HistorySection.astro';
 import ExperienceSection from '../components/ExperienceSection.astro';
+import TransportSection from '../components/TransportSection.astro';
+import SeasonalStrategy from '../components/SeasonalStrategy.astro';
+import Itineraries from '../components/Itineraries.astro';
+import VisitorResponsibility from '../components/VisitorResponsibility.astro';
 
 const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
 const heroUrl = Astro.site ? new URL('/images/king-fahd-central-park-hero.jpg', Astro.site).href : undefined;
@@ -13,6 +17,7 @@ const faqs = [
   ['أين تقع حديقة الملك فهد المركزية؟', 'تقع الحديقة في حي الحديقة بالمدينة المنورة، جنوب المسجد النبوي بنحو خمسة كيلومترات وفق المواد المنشورة من الجهات المحلية، ويمكن الوصول إليها عبر موقعها المثبت في خرائط Google.'],
   ['ما أوقات زيارة الحديقة؟', 'تذكر الأدلة المحلية المتاحة أن الزيارة تكون يومياً خلال الفترة المسائية، وتورد بعض المنصات وقتاً شائعاً من الرابعة مساءً حتى منتصف الليل. قد تتغير الساعات في المواسم والفعاليات، لذلك يُنصح بالتحقق من المصدر الرسمي قبل الانطلاق.'],
   ['هل توجد رسوم دخول؟', 'لا تذكر المصادر السياحية المستخدمة رسوماً عامة ثابتة للدخول إلى المساحات المفتوحة في الحديقة. قد تكون لبعض الفعاليات أو المرافق أو الخدمات الداخلية رسوم مستقلة، لذا من الأفضل التحقق منها عند الزيارة.'],
+  ['ما تقييم زوّار حديقة الملك فهد المركزية؟', 'يظهر للحديقة تقييم مرتفع على منصات التقييم العامة يُقدَّر بنحو 4.2 من 5 بناءً على عشرات الآلاف من التقييمات، وقد يختلف الظاهر قليلاً بين المنصة والموسم. راجع بطاقة الموقع على خرائط Google للاطلاع على أحدث التقييمات والصور المرفوعة من الزوّار.'],
   ['هل تتوفر مواقف للسيارات؟', 'نعم. تذكر أمانة منطقة المدينة المنورة وجود ثمانية مواقف رئيسية بمساحة إجمالية تقارب عشرين ألف متر مربع، إضافة إلى مواقف طولية مرتبطة بمشروع تطوير الحديقة.'],
   ['كم من الوقت أحتاج لزيارة الحديقة؟', 'للتنزه الهادئ ومشاهدة أبرز المساحات الخضراء والبحيرة والممرات، يناسب معظم الزوار تخصيص نحو ساعتين إلى ثلاث ساعات. قد تحتاج مدة أطول عند حضور فعالية أو تناول الطعام داخل المنطقة.'],
   ['هل الحديقة مناسبة للعائلات والأطفال؟', 'تصف الجهات المحلية الحديقة كوجهة اجتماعية وعائلية، وتذكر وجود مناطق لعب للأطفال ومسارات للمشي والجري وركوب الدراجات ومساحات جلوس ومرافق ترفيهية وثقافية.'],
@@ -30,7 +35,13 @@ const attractionSchema = {
   '@type': ['TouristAttraction', 'LocalBusiness'],
   ...(entityId ? { '@id': entityId } : {}),
   name: 'حديقة الملك فهد المركزية',
-  alternateName: ['حديقة الملك فهد', 'King Fahad Central Park'],
+  alternateName: [
+    'حديقة الملك فهد',
+    'King Fahad Central Park',
+    'Madinah Central Park',
+    'Central Park Madinah',
+    'حديقة المدينة المركزية'
+  ],
   description: 'حديقة حضرية واسعة في المدينة المنورة تجمع المساحات الخضراء ومسارات المشي والجري والدراجات ومناطق الأطفال والمرافق الثقافية والترفيهية والبحيرة الاصطناعية.',
   ...(siteUrl ? { url: siteUrl } : {}),
   ...(heroUrl ? { image: [heroUrl] } : {}),
@@ -63,7 +74,7 @@ const attractionSchema = {
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: 4.2,
-    reviewCount: 25536,
+    reviewCount: 25581,
     bestRating: 5,
     worstRating: 1
   },
@@ -91,8 +102,21 @@ const faqSchema = {
   }))
 };
 
-const pageTitle = 'حديقة الملك فهد المركزية | دليل الزائر في المدينة المنورة';
-const pageDesc = 'دليل عربي مستقل لحديقة الملك فهد المركزية في المدينة المنورة: الموقع وأوقات الزيارة والمواقف والمرافق والخدمات، حالة الطقس وتوقعات الأيام، خلفية المكان وتطوره، الأماكن القريبة، خريطة Google والأسئلة الشائعة.';
+const breadcrumbSchema = siteUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'حديقة الملك فهد المركزية', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'المدينة المنورة', item: 'https://visitmadinahsa.com/sa-ar' },
+        { '@type': 'ListItem', position: 3, name: 'منطقة المدينة المنورة', item: 'https://www.amana-md.gov.sa' },
+        { '@type': 'ListItem', position: 4, name: 'المملكة العربية السعودية', item: 'https://www.visitsaudi.com/ar' }
+      ]
+    }
+  : undefined;
+
+const pageTitle = 'حديقة الملك فهد المركزية بالمدينة المنورة | المواعيد، الموقع والأنشطة';
+const pageDesc = 'دليل عربي لحديقة الملك فهد المركزية (Madinah Central Park) في المدينة المنورة: المواعيد وأوقات الزيارة، الموقع وخريطة Google، المواقف والمرافق والأنشطة العائلية، حالة الطقس والأسئلة الشائعة.';
 const pageDate = '2026-09-04';
 
 const graphSchema = siteUrl
@@ -141,7 +165,7 @@ const graphSchema = siteUrl
 <BaseLayout
   title={pageTitle}
   description={pageDesc}
-  jsonLd={[attractionSchema, faqSchema, ...(graphSchema ? [graphSchema] : [])]}
+  jsonLd={[attractionSchema, faqSchema, ...(breadcrumbSchema ? [breadcrumbSchema] : []), ...(graphSchema ? [graphSchema] : [])]}
 >
   <section class="relative isolate overflow-hidden bg-night-950 text-white">
     <div class="absolute inset-0">
@@ -158,7 +182,7 @@ const graphSchema = siteUrl
         <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">حديقة الملك فهد المركزية <span class="mt-3 block text-3xl font-black leading-snug text-gold-400 sm:text-4xl">المدينة المنورة · المملكة العربية السعودية</span></h1>
         <p class="mt-6 max-w-3xl text-xl leading-10 text-sand-100/92">واحة حضرية واسعة تجمع الأشجار والظلال ومسارات الحركة والمرافق العائلية والثقافية، على مسافة تقارب خمسة كيلومترات جنوب المسجد النبوي.</p>
         <div class="mt-7 flex flex-wrap gap-3 text-sm font-black">
-          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">★ 4.2 · 25,536 تقييماً</span>
+          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">★ 4.2 · 25,581 تقييماً</span>
           <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">حديقة عامة</span>
           <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">CJC4+2F</span>
         </div>
@@ -178,9 +202,19 @@ const graphSchema = siteUrl
   <section id="عن-الحديقة" class="leaf-divider border-b border-palm-900/10 bg-sand-50 py-16 lg:py-24">
     <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[1.05fr_.7fr] lg:px-8">
       <div>
-        <p class="text-sm font-black text-gold-600">معلم أخضر في المدينة المنورة</p>
+        <nav aria-label="مسار الانتماء الجغرافي" class="flex flex-wrap items-center gap-2 text-xs font-black text-palm-900/55">
+          <span>حديقة الملك فهد المركزية</span>
+          <span aria-hidden="true">›</span>
+          <span>المدينة المنورة</span>
+          <span aria-hidden="true">›</span>
+          <span>منطقة المدينة المنورة</span>
+          <span aria-hidden="true">›</span>
+          <span>المملكة العربية السعودية</span>
+        </nav>
+        <p class="text-sm font-black text-gold-600 mt-4">معلم أخضر في المدينة المنورة</p>
         <h2 class="mt-3 text-4xl font-black leading-tight text-palm-900 sm:text-5xl">حديقة كبيرة بطابع اجتماعي وثقافي</h2>
         <div class="mt-7 space-y-5 text-lg leading-9 text-palm-900/75">
+          <p>تُعدّ حديقة الملك فهد المركزية الحديقة المركزية الكبرى في المدينة المنورة، والمعروفة بالإنجليزية باسم «Madinah Central Park»، وهي الوجهة التي يرمز إليها النطاق madinahcentralpark.com. تقع في قلب المدينة المنورة وتعتبر محوراً رئيسياً لزوار المنطقة.</p>
           <p>تصف أمانة منطقة المدينة المنورة حديقة الملك فهد المركزية بأنها إحدى الوجهات الاجتماعية والثقافية البارزة في المدينة، وتجمع بين مساحات خضراء واسعة ومبانٍ ذات طابع تراثي ومرافق للحركة والاستراحة.</p>
           <p>وتشمل عناصرها المذكورة في المصادر المحلية مسارات للمشي والجري وركوب الدراجات، ومناطق ألعاب للأطفال، وجلسات، وبحيرة اصطناعية، ومساحات ثقافية، ومرافق للفروسية والطعام، إضافة إلى سوق العينية والحي التراثي ومركز فنون المدينة.</p>
         </div>
@@ -218,32 +252,9 @@ const graphSchema = siteUrl
 
   <Weather />
 
-  <section id="الوصول" class="bg-palm-900 py-16 text-white lg:py-24">
-    <div class="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-[.75fr_1.15fr] lg:px-8">
-      <div>
-        <p class="text-sm font-black text-gold-400">الوصول والخريطة</p>
-        <h2 class="mt-3 text-4xl font-black sm:text-5xl">تفاصيل الوصول إلى الحديقة</h2>
-        <div class="mt-7 space-y-5 text-sm leading-8 text-white/78">
-          <p><strong class="text-white">بالسيارة أو سيارة الأجرة:</strong> استخدم اسم «حديقة الملك فهد المركزية» أو الرمز المختصر ‏CJC4+2F. المدخل يقع في حي الحديقة جنوب وسط المدينة.</p>
-          <p><strong class="text-white">من المسجد النبوي:</strong> تشير المصادر المحلية إلى أن الحديقة تقع على بعد نحو خمسة كيلومترات إلى الجنوب. زمن الرحلة الفعلي يتأثر بحركة المرور ونقطة الانطلاق.</p>
-          <p><strong class="text-white">بالنقل العام:</strong> لا يعتمد هذا الدليل رقم خط ثابتاً حتى لا يعرض مساراً قد يتغير. راجع تطبيقات النقل المحلية أو خدمة الخرائط قبل الرحلة.</p>
-          <p><strong class="text-white">للمشاة:</strong> المشروع يضم أرصفة ومسارات داخلية واسعة، لكن الوصول من مناطق بعيدة في المدينة يُفضّل أن يكون بوسيلة نقل مناسبة لحرارة الجو والمسافة.</p>
-        </div>
-      </div>
-      <div class="overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 ring-white/10">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6461.616883614993!2d39.603600277155515!3d24.420040678219355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15bdc08c81f9c289%3A0x3c32ee418fc8dbbc!2sKing%20Fahad%20Central%20Park!5e1!3m2!1sar!2ssa!4v1788420936620!5m2!1sar!2ssa&hl=ar&gl=sa"
-          width="100%"
-          height="520"
-          style="border:0"
-          allowfullscreen
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-          title="خريطة حديقة الملك فهد المركزية في المدينة المنورة"
-        ></iframe>
-      </div>
-    </div>
-  </section>
+  <SeasonalStrategy />
+
+  <TransportSection />
 
   <section id="حول-الحديقة" class="bg-sand-50 py-16 lg:py-24">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
@@ -276,6 +287,10 @@ const graphSchema = siteUrl
   <HistorySection />
 
   <ExperienceSection />
+
+  <Itineraries />
+
+  <VisitorResponsibility />
 
   <section class="bg-white py-16 lg:py-24">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
@@ -339,7 +354,7 @@ const graphSchema = siteUrl
           <a href="https://visitmadinahsa.com/sa-ar/destinations/حديقة-الملك-فهد" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">منصة المدينة</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">وجهة حديقة الملك فهد ضمن محتوى هيئة تطوير منطقة المدينة المنورة.</span></a>
           <a href="https://www.visitsaudi.com/ar" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">روح السعودية</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">البوابة الوطنية للسياحة في المملكة العربية السعودية.</span></a>
         </div>
-        <p class="mt-6 text-xs leading-6 text-palm-900/55">بيانات الطقس مصدرها خدمة Open-Meteo المفتوحة وتُجلب من الخادم وقت بناء الصفحة. تُعرض قوائم الخدمات الواردة في هذا الدليل كنوع فقط من دون أسماء منشآت. تفاصيل حقوق الصور في تذييل الموقع.</p>
+        <p class="mt-6 text-xs leading-6 text-palm-900/55">تُجلب قراءات الطقس من خدمة Open-Meteo عند بناء الصفحة وتُخزَّن داخلها. تُعرض قوائم الخدمات الواردة في هذا الدليل كنوع فقط من دون أسماء منشآت. تفاصيل حقوق الصور في تذييل الموقع.</p>
       </div>
     </div>
   </section>

@@ -1,5 +1,5 @@
 ---
-// حالة الطقس: تُجلب من خدمة Open-Meteo المجانية (بدون مفتاح) من جهة الخادم وقت إنشاء الصفحة،
+// حالة الطقس: تُجلب من خدمة Open-Meteo من جهة الخادم وقت إنشاء الصفحة،
 // وتُخزَّن داخل ملف HTML الثابت، فلا يُطلق المتصفح أي طلب بيانات من طرف ثالث.
 const LAT = '24.4200407';
 const LON = '39.6036003';
@@ -9,9 +9,9 @@ const params = new URLSearchParams({
   latitude: LAT,
   longitude: LON,
   current: 'temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m',
-  daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+  daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max,wind_speed_10m_max',
   timezone: 'Asia/Riyadh',
-  forecast_days: '6',
+  forecast_days: '7',
   wind_speed_unit: 'kmh'
 });
 
@@ -45,7 +45,7 @@ const WMO: Record<number, { text: string; icon: string }> = {
   66: { text: 'مطر متجمد', icon: '🌧️' },
   67: { text: 'مطر متجمد غزير', icon: '🌧️' },
   71: { text: 'ثلوج خفيفة', icon: '🌨️' },
-  73: { text: 'ثلوج', icon: '🌨️' },
+  73: { text: 'ثلوج', icon: '❄️' },
   75: { text: 'ثلوج كثيفة', icon: '❄️' },
   77: { text: 'حبيبات ثلجية', icon: '❄️' },
   80: { text: 'زخات مطر', icon: '🌦️' },
@@ -62,6 +62,28 @@ function wmoInfo(code: number | null | undefined) {
   return code != null && WMO[code] ? WMO[code] : { text: 'حالة غير محددة', icon: '🌡️' };
 }
 
+function beaufort(kmh: number) {
+  if (kmh < 1) return 0;
+  if (kmh <= 5) return 1;
+  if (kmh <= 11) return 2;
+  if (kmh <= 19) return 3;
+  if (kmh <= 28) return 4;
+  if (kmh <= 38) return 5;
+  if (kmh <= 49) return 6;
+  if (kmh <= 61) return 7;
+  if (kmh <= 74) return 8;
+  if (kmh <= 88) return 9;
+  if (kmh <= 102) return 10;
+  return 11;
+}
+
+function uvLabel(uv: number) {
+  if (uv < 3) return 'ضعيفة';
+  if (uv <= 5) return 'متوسطة';
+  if (uv <= 7) return 'قوية';
+  return 'شديدة';
+}
+
 const dayNames = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 
@@ -75,14 +97,77 @@ const current = ok ? payload.current : null;
 const daily = ok ? payload.daily : null;
 const today = daily?.time?.[0];
 const currentWmo = current ? wmoInfo(current.weather_code) : null;
----
 
+// تصنيف الحالة ليوم الزيارة (لحظي + يومي) لاشتقاق نصائح عملية.
+const RAIN = new Set([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99]);
+const HEAVY = new Set([65, 66, 67, 81, 82, 95, 96, 99]);
+const THUNDER = new Set([95, 96, 99]);
+const nowCode = current?.weather_code;
+const todayCode = daily?.weather_code?.[0];
+const isRainNow = nowCode != null && RAIN.has(nowCode);
+const isRainToday = todayCode != null && RAIN.has(todayCode);
+const isThunder = (nowCode != null && THUNDER.has(nowCode)) || (todayCode != null && THUNDER.has(todayCode));
+const heavyRain = (nowCode != null && HEAVY.has(nowCode)) || (todayCode != null && HEAVY.has(todayCode));
+const rainProb = daily?.precipitation_probability_max?.[0] ?? 0;
+const likelyRain = rainProb >= 60 || isRainNow || isRainToday;
+const tmax = daily?.temperature_2m_max?.[0] ?? 0;
+const tmin = daily?.temperature_2m_min?.[0] ?? 0;
+const tempDiff = tmax - tmin;
+const uvMax = daily?.uv_index_max?.[0] ?? 0;
+const windNow = current?.wind_speed_10m ?? 0;
+const windMax = daily?.wind_speed_10m_max?.[0] ?? windNow;
+const windLvl = beaufort(Math.max(windNow, windMax));
+const isSunny = nowCode === 0 || nowCode === 1 || todayCode === 0 || todayCode === 1;
+const isCloudy = nowCode === 2 || nowCode === 3 || todayCode === 2 || todayCode === 3;
+const isFog = nowCode === 45 || nowCode === 48 || todayCode === 45 || todayCode === 48;
+
+// محرّك النصائح: يُعرض فقط ما ينطبق، وما لا ينطبق يُخفى.
+const outfitTips: string[] = [];
+const planTips: string[] = [];
+const itemsTips: string[] = [];
+const riskTips: string[] = [];
+
+if (ok) {
+  if (tmax >= 32) outfitTips.push('ارتدِ ملابس خفيفة وقطنية، ولا تنسَ غطاء رأس.');
+  if (tmin <= 10) outfitTips.push('احمل معطفاً دافئاً ووشاحاً للبرودة.');
+  if (tempDiff > 8) outfitTips.push('فرق الحرارة بين النهار والليل كبير؛ احمل طبقة إضافية خفيفة.');
+  if (heavyRain) outfitTips.push('ارتدي معطفاً مقاوماً للمطر، وتجنّب المظلة الطويلة إن نشطت الرياح.');
+  else if (likelyRain) outfitTips.push('احمل معطفاً خفيفاً واقياً من المطر.');
+  if (windLvl >= 5) outfitTips.push('الرياح نشطة؛ تجنّب القبعات التي تطير والملابس الفضفاضة.');
+
+  if (isSunny) planTips.push('الطقس صحو ومناسب للتنزه والجلوس في الهواء الطلق وتصوير الغروب.');
+  if (isCloudy) planTips.push('إضاءة ناعمة مناسبة للتصوير والمشي الطويل بلا حرارة حادة.');
+  if (tmax >= 32) planTips.push('اختصر وقت المشي تحت الشمس، وفضّل الزيارة بعد المغرب.');
+  if (rainProb >= 60) planTips.push('احتمال مطر مرتفع؛ اجلس قرب المسطحات المظللة أو أجّل المسار المكشوف.');
+  if (isRainNow && !heavyRain) planTips.push('مطر خفيف؛ المسارات المكشوفة زلقة، امشِ بحذر.');
+  if (heavyRain) planTips.push('مطر غزير؛ يُفضّل تأجيل الزيارة المفتوحة إذ قد تتوقف بعض المرافق.');
+  if (isThunder) planTips.push('عاصفة رعدية؛ لا تجلس تحت الأشجار ولا تقترب من حافة البحيرة.');
+  if (isFog) planTips.push('ضباب يضعف الرؤية؛ غير مناسب للتصوير البعيد اليوم.');
+  if (windLvl >= 7) planTips.push('رياح قوية؛ تجنّب الاقتراب من حواف البحيرة والمسارات المكشوفة.');
+
+  if (heavyRain) itemsTips.push('مطرّة مقاومة للماء');
+  else if (rainProb >= 60 || isRainNow) itemsTips.push('مظلّة قابلة للطي');
+  if (uvMax >= 5) itemsTips.push('واقٍ شمسي ونظارة شمسية');
+  if (tmax >= 32) { itemsTips.push('قبعة وزي خفيف'); itemsTips.push('مياه شرب كافية'); }
+  if (tmin <= 10) itemsTips.push('معطف دافئ');
+  if (heavyRain && windLvl >= 5) itemsTips.push('تجنّب المظلة الطويلة (الرياح)');
+
+  if (isThunder) riskTips.push('عاصفة رعدية؛ عدّل نشاطك وابتعد عن البحيرة والأشجار.');
+  if (heavyRain) riskTips.push('أمطار غزيرة؛ تجنّب المناطق المنخفضة وحواف المياه.');
+  if (tmax >= 45) riskTips.push('موجة حرارة؛ قلّل التعرّض للشمس وراقب الأطفال وكبار السن.');
+  if (windLvl >= 7) riskTips.push('رياح قوية؛ ابتعد عن حواف المياه واللوحات والفروع.');
+
+  if (outfitTips.length === 0) outfitTips.push('لا حاجة لملابس خاصة اليوم؛ الزي العادي مناسب.');
+  if (planTips.length === 0) planTips.push('الأجواء متوازنة اليوم؛ مناسبة للتنزه عموماً.');
+  if (itemsTips.length === 0) itemsTips.push('لا معدات إضافية مطلوبة اليوم.');
+}
+---
 <section id="الطقس" class="bg-white py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="max-w-3xl">
       <p class="text-sm font-black text-gold-600">حالة الطقس قرب الحديقة</p>
-      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">الطقس الآن وأقرب ستة أيام</h2>
-      <p class="mt-5 text-lg leading-9 text-palm-900/70">تناسب ليلة المدينة ودرجات الحرارة بعد غروب الشمس معظم أشهر السنة، بينما يتطلب النهار في الصيف الانتباه لشدة الحرارة والرطوبة المنخفضة عادةً.</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">الطقس الآن وأقرب سبعة أيام</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">تُجلب القراءات من محطة رصد قريبة عند إنشاء الصفحة وتُخزَّن داخلها، فلا تُطلب من جهازك. تُرجَم الأرقام أدناه إلى نصائح عملية لزيارتك مباشرة.</p>
     </div>
 
     {
@@ -102,12 +187,15 @@ const currentWmo = current ? wmoInfo(current.weather_code) : null;
               </div>
               <div class="text-7xl leading-none" aria-hidden="true">{currentWmo!.icon}</div>
             </div>
-            <dl class="mt-7 grid grid-cols-3 gap-3 border-t border-white/15 pt-6 text-center text-sm">
+            <dl class="mt-7 grid grid-cols-2 gap-3 border-t border-white/15 pt-6 text-center text-sm">
               <div><dt class="text-white/60">الإحساس</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.apparent_temperature)}°</dd></div>
               <div><dt class="text-white/60">الرطوبة</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.relative_humidity_2m)}٪</dd></div>
-              <div><dt class="text-white/60">الرياح</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.wind_speed_10m)}</dd></div>
+              <div><dt class="text-white/60">الرياح</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(windNow)} <span class="text-xs font-bold text-white/60">كم/س · {windLvl}</span></dd></div>
+              <div><dt class="text-white/60">الأشعة فوق البنفسجية</dt><dd class="mt-1 text-lg font-black" dir="ltr">{uvMax} <span class="text-xs font-bold text-white/60">{uvLabel(uvMax)}</span></dd></div>
             </dl>
-            <p class="mt-6 text-xs leading-6 text-white/55">قراءات محطة قريبة عبر خدمة Open-Meteo المجانية؛ تُعرض كما وردت وقد تختلف قليلاً على أرض الحديقة نفسها.</p>
+            <p class="mt-4 rounded-2xl bg-white/10 px-4 py-3 text-center text-sm font-black">
+              {rainProb > 0 ? `احتمال أمطار اليوم ${rainProb}٪` : 'لا أمطار متوقعة اليوم'}
+            </p>
           </article>
 
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
@@ -135,10 +223,52 @@ const currentWmo = current ? wmoInfo(current.weather_code) : null;
       )
     }
 
+    {
+      ok && riskTips.length > 0 && (
+        <div class="mt-8 rounded-[2rem] border border-red-200 bg-red-50 p-6">
+          <p class="flex items-center gap-2 text-base font-black text-red-700"><span aria-hidden="true">⚠️</span>تنبيه جوي</p>
+          <ul class="mt-3 space-y-2 text-sm leading-7 text-red-700/90">
+            {riskTips.map((t) => (
+              <li class="flex gap-2"><span aria-hidden="true">•</span><span>{t}</span></li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    {
+      ok && (
+        <div class="mt-8 grid gap-5 md:grid-cols-3">
+          <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6">
+            <h3 class="flex items-center gap-2 text-lg font-black text-palm-900"><span aria-hidden="true">🧥</span>ماذا تلبس</h3>
+            <ul class="mt-4 space-y-2 text-sm leading-7 text-palm-900/75">
+              {outfitTips.map((t) => (
+                <li class="flex gap-2"><span class="mt-1 text-gold-600" aria-hidden="true">✓</span><span>{t}</span></li>
+              ))}
+            </ul>
+          </article>
+          <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6">
+            <h3 class="flex items-center gap-2 text-lg font-black text-palm-900"><span aria-hidden="true">🗺️</span>كيف ترتّب زيارتك</h3>
+            <ul class="mt-4 space-y-2 text-sm leading-7 text-palm-900/75">
+              {planTips.map((t) => (
+                <li class="flex gap-2"><span class="mt-1 text-gold-600" aria-hidden="true">✓</span><span>{t}</span></li>
+              ))}
+            </ul>
+          </article>
+          <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6">
+            <h3 class="flex items-center gap-2 text-lg font-black text-palm-900"><span aria-hidden="true">🎒</span>ماذا تحمل معك</h3>
+            <ul class="mt-4 space-y-2 text-sm leading-7 text-palm-900/75">
+              {itemsTips.map((t) => (
+                <li class="flex gap-2"><span class="mt-1 text-gold-600" aria-hidden="true">✓</span><span>{t}</span></li>
+              ))}
+            </ul>
+          </article>
+        </div>
+      )
+    }
+
     <p class="mt-8 max-w-4xl text-xs leading-6 text-palm-900/50">
-      بيانات الطقس مصدرها Open-Meteo (خدمة تنبؤات مجانية ومفتوحة)، وتُجلب من جهة الخادم عند إنشاء الصفحة ثم تُخزَّن داخلها؛
-      أي أنها لا تُطلَب من جهازك ولا تخضع لخيارات ملفات تعريف الارتباط. في الصيف يُنصح بالزيارة بعد المغرب، وفي الشتاء والربيع
-      تكون الأجواء أوفر للتنزه نهاراً.
+      تُجلب هذه القراءات من محطة رصد قريبة عند إنشاء الصفحة وتُخزَّن داخلها، أي أنها لا تُطلَب من جهازك، وقد تختلف قليلاً عمّا على أرض الحديقة نفسها. راجع نشرة الطقس الرسمية قبل التحرك في مواسم الأمطار أو الغبار.
     </p>
   </div>
 </section>

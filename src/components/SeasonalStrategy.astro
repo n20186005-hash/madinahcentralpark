@@ -1,0 +1,104 @@
+---
+// استراتيجية الزيارة حسب الفصول + تحليل المناخ والمياه والحياة الفطرية.
+// المصدر المرجعي للمناخ: الهيئة العامة للأرصاد وحماية البيئة / المركز الوطني للأرصاد في السعودية (وليس مصادر أمريكية لا علاقة لها بالموقع).
+const seasons = [
+  {
+    name: 'الشتاء',
+    months: 'ديسمبر – فبراير',
+    temp: '14–25°م',
+    rain: 'أمطار خفيفة متفرقة',
+    advice: 'أوفر الفصول للمشي نهاراً والجلوس في الهواء الطلق؛ احمل طبقة خفيفة للمساء.',
+    goodFor: 'العائلات · المشي الطويل · التصوير النهاري'
+  },
+  {
+    name: 'الربيع',
+    months: 'مارس – مايو',
+    temp: '20–35°م',
+    rain: 'عواصف ترابية محتملة',
+    advice: 'دافئ ومريح صباحاً؛ راقب تنبيهات الغبار واحرص على سوائل كافية عند الظهيرة.',
+    goodFor: 'النزهات · الفعاليات · التصوير عند الغروب'
+  },
+  {
+    name: 'الصيف',
+    months: 'يونيو – أغسطس',
+    temp: '38–44°م',
+    rain: 'جاف عملياً',
+    advice: 'حار جداً نهاراً؛ تفضّل الزيارة بعد المغرب وابتعد عن المسارات المكشوفة وقت الذروة.',
+    goodFor: 'الزيارة المسائية · الإضاءة والفعاليات الليلية'
+  },
+  {
+    name: 'الخريف',
+    months: 'سبتمبر – نوفمبر',
+    temp: '25–38°م',
+    rain: 'اعتدال تدريجي',
+    advice: 'تبدأ الأجواء بالاعتدال وتعود ملائمة للمشي نهاراً مع إطلالة أكتوبر.',
+    goodFor: 'الرحلات العائلية · التصوير · الرياضة الخفيفة'
+  }
+];
+
+const environment = [
+  {
+    icon: '🌡️',
+    title: 'المناخ',
+    body: 'مناخ المدينة المنورة صحراوي جاف، بفارق كبير بين حرارة النهار والليل. يستند هذا الرصد إلى متوسطات المناخ المرجعية الصادرة عن المركز الوطني للأرصاد في السعودية. الصيف شديد الحرارة وجاف، والشتاء لطيف، ما يجعل المساء معظم العام والنهار في الشتاء/الربيع الأوفر للتنزه.'
+  },
+  {
+    icon: '💧',
+    title: 'المياه والري',
+    body: 'تُبقى المسطحات الخضراء والأشجار في بيئة صحراوية عبر شبكة ري منتظمة، وتضم الحديقة بحيرة اصطناعية ذات طابع تجميلي. هي وجهة للمشاهدة لا للسباحة أو الدخول، ويُنصح بإحضار مياه للشرب في الأيام الحارة لأن الرطوبة المنخفضة تزيد الشعور بالعطش.'
+  },
+  {
+    icon: '🐦',
+    title: 'الحياة الفطرية',
+    body: 'تأوي المسطحات الخضراء طيوراً محلية مثل الحمام والعصافير، وتمر بها طيور مهاجرة على دروب الواحات القريبة، إلى جانب نباتات وزهور موسمية مروية. لا تُطعم الطيور ولا تقتطع النباتات؛ المراقبة الهادئة تحفظ التوازن للجميع.'
+  }
+];
+---
+<section id="الاستراتيجية-الموسمية" class="oasis-grid bg-white py-16 lg:py-24">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="max-w-3xl">
+      <p class="text-sm font-black text-gold-600">متى تزور وكيف تستعد</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">استراتيجية الزيارة حسب الفصول</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">جدول يلخّص حرارة كل فصل وموسم الأمطار وأنسب نصيحة، يليه تحليل محايد للمناخ والمياه والحياة الفطرية في بيئة الحديقة.</p>
+    </div>
+
+    <div class="mt-10 overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+      <table class="w-full text-right text-sm">
+        <thead class="bg-palm-900 text-white">
+          <tr>
+            <th class="px-4 py-3 font-black">الفصل</th>
+            <th class="px-4 py-3 font-black">الأشهر</th>
+            <th class="px-4 py-3 font-black">الحرارة النموذجية</th>
+            <th class="px-4 py-3 font-black">الأمطار</th>
+            <th class="px-4 py-3 font-black">نصيحة الزيارة</th>
+            <th class="px-4 py-3 font-black">مناسب لـ</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-palm-900/10">
+          {seasons.map((s) => (
+            <tr class="align-top">
+              <td class="px-4 py-4 font-black text-palm-900">{s.name}</td>
+              <td class="px-4 py-4 text-palm-900/70" dir="ltr">{s.months}</td>
+              <td class="px-4 py-4 font-black text-palm-900" dir="ltr">{s.temp}</td>
+              <td class="px-4 py-4 text-palm-900/70">{s.rain}</td>
+              <td class="px-4 py-4 text-palm-900/70">{s.advice}</td>
+              <td class="px-4 py-4 text-palm-900/70">{s.goodFor}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-12 grid gap-5 md:grid-cols-3">
+      {environment.map((e) => (
+        <article class="rounded-[2rem] border border-palm-900/10 bg-white p-6">
+          <div class="text-3xl" aria-hidden="true">{e.icon}</div>
+          <h3 class="mt-4 text-xl font-black text-palm-900">{e.title}</h3>
+          <p class="mt-3 text-sm leading-8 text-palm-900/68">{e.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="mt-8 max-w-4xl text-xs leading-6 text-palm-900/55">تستند أرقام المناخ إلى متوسطات مرجعية للمركز الوطني للأرصاد في السعودية، وقد تختلف الظروف الفعلية يوم الزيارة؛ راجع نشرة الطقس الرسمية قبل التحرك في مواسم الأمطار أو الغبار.</p>
+  </div>
+</section>
