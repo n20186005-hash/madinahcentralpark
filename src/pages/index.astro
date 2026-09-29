@@ -12,12 +12,19 @@ import VisitorResponsibility from '../components/VisitorResponsibility.astro';
 const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
 const heroUrl = Astro.site ? new URL('/images/king-fahd-central-park-hero.jpg', Astro.site).href : undefined;
 const entityId = siteUrl ? `${siteUrl}#king-fahad-central-park` : undefined;
+const galleryImages = ['hero', 'fountain', 'playground', 'walkway', 'evening', 'entrance'].map((slug) =>
+  Astro.site ? new URL(`/images/king-fahd-central-park-${slug}.jpg`, Astro.site).href : undefined
+).filter((value): value is string => typeof value === 'string');
 
 const faqs = [
   ['أين تقع حديقة الملك فهد المركزية؟', 'تقع الحديقة في حي الحديقة بالمدينة المنورة، جنوب المسجد النبوي بنحو خمسة كيلومترات وفق المواد المنشورة من الجهات المحلية، ويمكن الوصول إليها عبر موقعها المثبت في خرائط Google.'],
   ['ما أوقات زيارة الحديقة؟', 'تذكر الأدلة المحلية المتاحة أن الزيارة تكون يومياً خلال الفترة المسائية، وتورد بعض المنصات وقتاً شائعاً من الرابعة مساءً حتى منتصف الليل. قد تتغير الساعات في المواسم والفعاليات، لذلك يُنصح بالتحقق من المصدر الرسمي قبل الانطلاق.'],
+  ['أين موقع حديقة الملك فهد المركزية على الخريطة؟', 'تقع الحديقة في حي الحديقة جنوب المسجد النبوي بنحو خمسة كيلومترات، عند الإحداثيين 24.4200407، 39.6036003 ورمز الموقع (Plus Code) CJC4+2F. افتح الرابط المثبت في خرائط Google من هذه الصفحة للحصول على الاتجاهات خطوة بخطوة من موقعك الحالي.'],
+  ['هل تتغير مواعيد الحديقة في رمضان والأعياد؟', 'تزداد البرامج والفعاليات في رمضان والأعياد والمواسم، وقد تمتد ساعات الزيارة أو تُعدَّل بحسب جدول كل فعالية. لا يثبت هذا الدليل ساعات خاصة بتلك الفترات، لذلك يُفضَّل مراجعة حسابات أمانة منطقة المدينة المنورة والجهات المنظمة قبل التوجه.'],
+  ['هل يوجد ممشى طويل للمشي والجري داخل الحديقة؟', 'تذكر مصادر الأمانة وجود مسارات مخصصة للمشي والجري وركوب الدراجات ضمن مرافق الحديقة، إضافة إلى ممرات واسعة تربط المساحات الخضراء بالبحيرة الاصطناعية. يُنصح بالالتزام بالممرات المخصصة ومراعاة العائلات والأطفال، خاصة في ساعات الذروة المسائية.'],
+  ['أين أجد صور حديقة الملك فهد المركزية؟', 'تعرض هذه الصفحة معرضاً بصور لأبرز عناصر الحديقة: المساحات الخضراء والأشجار، النوافير والعناصر المائية، مناطق ألعاب الأطفال، الممشى ومسارات الحركة، أجواء المساء، والمداخل. وللاطلاع على صور الزوّار المحدثة، راجع بطاقة الحديقة على خرائط Google.'],
   ['هل توجد رسوم دخول؟', 'لا تذكر المصادر السياحية المستخدمة رسوماً عامة ثابتة للدخول إلى المساحات المفتوحة في الحديقة. قد تكون لبعض الفعاليات أو المرافق أو الخدمات الداخلية رسوم مستقلة، لذا من الأفضل التحقق منها عند الزيارة.'],
-  ['ما تقييم زوّار حديقة الملك فهد المركزية؟', 'يظهر للحديقة تقييم مرتفع على منصات التقييم العامة يُقدَّر بنحو 4.2 من 5 بناءً على عشرات الآلاف من التقييمات، وقد يختلف الظاهر قليلاً بين المنصة والموسم. راجع بطاقة الموقع على خرائط Google للاطلاع على أحدث التقييمات والصور المرفوعة من الزوّار.'],
+  ['ما تقييم زوّار حديقة الملك فهد المركزية؟', 'يظهر للحديقة تقييم مرتفع على منصات التقييم العامة يُقدَّر بنحو 4.2 من 5 بناءً على أكثر من 25 ألف تقييم (نحو 25,607 تقييماً في أحدث لقطة)، وقد يختلف الظاهر قليلاً بين المنصة والموسم. راجع بطاقة الموقع على خرائط Google للاطلاع على أحدث التقييمات والصور المرفوعة من الزوّار.'],
   ['هل تتوفر مواقف للسيارات؟', 'نعم. تذكر أمانة منطقة المدينة المنورة وجود ثمانية مواقف رئيسية بمساحة إجمالية تقارب عشرين ألف متر مربع، إضافة إلى مواقف طولية مرتبطة بمشروع تطوير الحديقة.'],
   ['كم من الوقت أحتاج لزيارة الحديقة؟', 'للتنزه الهادئ ومشاهدة أبرز المساحات الخضراء والبحيرة والممرات، يناسب معظم الزوار تخصيص نحو ساعتين إلى ثلاث ساعات. قد تحتاج مدة أطول عند حضور فعالية أو تناول الطعام داخل المنطقة.'],
   ['هل الحديقة مناسبة للعائلات والأطفال؟', 'تصف الجهات المحلية الحديقة كوجهة اجتماعية وعائلية، وتذكر وجود مناطق لعب للأطفال ومسارات للمشي والجري وركوب الدراجات ومساحات جلوس ومرافق ترفيهية وثقافية.'],
@@ -32,7 +39,7 @@ const faqs = [
 
 const attractionSchema = {
   '@context': 'https://schema.org',
-  '@type': ['TouristAttraction', 'LocalBusiness'],
+  '@type': ['TouristAttraction', 'Park', 'LocalBusiness'],
   ...(entityId ? { '@id': entityId } : {}),
   name: 'حديقة الملك فهد المركزية',
   alternateName: [
@@ -44,7 +51,7 @@ const attractionSchema = {
   ],
   description: 'حديقة حضرية واسعة في المدينة المنورة تجمع المساحات الخضراء ومسارات المشي والجري والدراجات ومناطق الأطفال والمرافق الثقافية والترفيهية والبحيرة الاصطناعية.',
   ...(siteUrl ? { url: siteUrl } : {}),
-  ...(heroUrl ? { image: [heroUrl] } : {}),
+  ...(galleryImages.length ? { image: galleryImages } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'حي الحديقة',
@@ -74,7 +81,7 @@ const attractionSchema = {
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: 4.2,
-    reviewCount: 25581,
+    reviewCount: 25607,
     bestRating: 5,
     worstRating: 1
   },
@@ -115,8 +122,8 @@ const breadcrumbSchema = siteUrl
     }
   : undefined;
 
-const pageTitle = 'حديقة الملك فهد المركزية بالمدينة المنورة | المواعيد، الموقع والأنشطة';
-const pageDesc = 'دليل عربي لحديقة الملك فهد المركزية (Madinah Central Park) في المدينة المنورة: المواعيد وأوقات الزيارة، الموقع وخريطة Google، المواقف والمرافق والأنشطة العائلية، حالة الطقس والأسئلة الشائعة.';
+const pageTitle = 'حديقة الملك فهد المركزية بالمدينة المنورة | المواعيد، الموقع، الأنشطة والصور';
+const pageDesc = 'مواعيد زيارة حديقة الملك فهد المركزية بالمدينة المنورة (Madinah Central Park) وأوقات العمل اليومية، الموقع على خريطة Google والمواقف، الأنشطة العائلية والمرافق، صور الحديقة وحالة الطقس. خطط لزيارتك الآن.';
 const pageDate = '2026-09-04';
 
 const graphSchema = siteUrl
@@ -182,7 +189,7 @@ const graphSchema = siteUrl
         <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">حديقة الملك فهد المركزية <span class="mt-3 block text-3xl font-black leading-snug text-gold-400 sm:text-4xl">المدينة المنورة · المملكة العربية السعودية</span></h1>
         <p class="mt-6 max-w-3xl text-xl leading-10 text-sand-100/92">واحة حضرية واسعة تجمع الأشجار والظلال ومسارات الحركة والمرافق العائلية والثقافية، على مسافة تقارب خمسة كيلومترات جنوب المسجد النبوي.</p>
         <div class="mt-7 flex flex-wrap gap-3 text-sm font-black">
-          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">★ 4.2 · 25,581 تقييماً</span>
+          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">★ 4.2 · 25,607 تقييماً</span>
           <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">حديقة عامة</span>
           <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">CJC4+2F</span>
         </div>
@@ -245,6 +252,56 @@ const graphSchema = siteUrl
         <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🅿️</span><h3 class="mt-4 text-xl font-black">مواقف السيارات</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">تذكر الأمانة ثمانية مواقف رئيسية بمساحة إجمالية تقارب 20,000 م²، إضافة إلى مواقف طولية. في الفعاليات الكبيرة يُفضّل الحضور مبكراً.</p></article>
         <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🕓</span><h3 class="mt-4 text-xl font-black">أوقات الزيارة</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">تذكر الأدلة المحلية فتح الحديقة يومياً في المساء، وتورد بعض المنصات 4:00 م–12:00 ص. تحقق قبل الانطلاق لأن الساعات قد تتغير.</p></article>
       </div>
+    </div>
+  </section>
+
+  <section id="مواعيد-الزيارة" class="bg-sand-50 py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-black text-gold-600">أوقات العمل</p>
+        <h2 class="mt-3 text-4xl font-black leading-tight text-palm-900 sm:text-5xl">مواعيد زيارة حديقة الملك فهد المركزية</h2>
+        <p class="mt-5 text-lg leading-9 text-palm-900/70">تذكر الأدلة المحلية أن زيارة الحديقة تكون يومياً في الفترة المسائية، وتورد بعض المنصات نطاقاً شائعاً من الرابعة مساءً حتى منتصف الليل. الساعات قابلة للتغيير في المواسم والفعاليات، لذا يُنصح بالتحقق من المصدر الرسمي قبل الانطلاق.</p>
+      </div>
+      <div class="mt-10 overflow-x-auto rounded-[2rem] border border-palm-900/10 bg-white">
+        <table class="w-full min-w-[42rem] border-collapse text-right text-sm">
+          <caption class="sr-only">جدول مواعيد زيارة حديقة الملك فهد المركزية في المدينة المنورة</caption>
+          <thead class="bg-palm-900 text-white">
+            <tr>
+              <th scope="col" class="px-5 py-4 font-black">الفترة</th>
+              <th scope="col" class="px-5 py-4 font-black">الأوقات المذكورة</th>
+              <th scope="col" class="px-5 py-4 font-black">ما ينبغي التنبه له</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-palm-900/10">
+            <tr>
+              <th scope="row" class="px-5 py-4 font-black text-palm-900">أيام الأسبوع</th>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">الفترة المسائية، ونطاق شائع من 4:00 م حتى 12:00 ص</td>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">الوصول قبل المغرب يسهل إيجاد موقف ويخفف حرارة النهار.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="px-5 py-4 font-black text-palm-900">نهاية الأسبوع</th>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">الفترة المسائية ذاتها في الغالب</td>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">أعلى ازدحام عادةً بعد صلاة العشاء، خصوصاً قرب مناطق الألعاب.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="px-5 py-4 font-black text-palm-900">رمضان والأعياد</th>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">ساعات موسّعة أو برامج خاصة بحسب الموسم</td>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">راجع حسابات الأمانة والجهات المنظمة لأن الجداول تتغير سنوياً.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="px-5 py-4 font-black text-palm-900">الفعاليات والبرامج الثقافية</th>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">مواعيد مستقلة عن ساعات الحديقة العامة</td>
+              <td class="px-5 py-4 leading-7 text-palm-900/70">قد تُفرض رسوم منفصلة على بعض الفعاليات أو المرافق.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black text-palm-900">أفضل وقت للوصول</h3><p class="mt-2 text-sm leading-7 text-palm-900/65">الوصول مع بداية الفترة المسائية يمنح وقتاً أطول للمشي قبل ذروة الحضور.</p></article>
+        <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black text-palm-900">الإضاءة ليلاً</h3><p class="mt-2 text-sm leading-7 text-palm-900/65">تُضاء المسارات الرئيسية في الساعات المسائية، ما يجعل التنزه بعد العشاء خياراً معتاداً للعائلات.</p></article>
+        <article class="rounded-3xl border border-palm-900/10 bg-white p-5"><h3 class="font-black text-palm-900">التحقق قبل الانطلاق</h3><p class="mt-2 text-sm leading-7 text-palm-900/65">لا يثبت هذا الدليل ساعات رسمية نهائية؛ تحقق من الحسابات الرسمية في المواسم قبل التوجه.</p></article>
+      </div>
+      <p class="mt-6 text-xs leading-6 text-palm-900/55">آخر مراجعة لمعلومات المواعيد في هذه الصفحة: سبتمبر 2026. الأوقات الواردة مذكورة كما تنشرها الأدلة المحلية والمنصات العامة، وليست تعهداً رسمياً من جهة الإدارة.</p>
     </div>
   </section>
 

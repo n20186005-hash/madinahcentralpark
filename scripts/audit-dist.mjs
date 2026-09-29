@@ -53,9 +53,10 @@ for (const f of htmls) {
   fail(`[${route}] og:image:alt`, ogImgAlt ? 'OK' : 'MISSING');
   fail(`[${route}] twitter:image`, twImg && twImg.startsWith(DOMAIN) ? 'OK' : 'MISSING');
   fail(`[${route}] twitter:card`, /name="twitter:card" content="summary_large_image"/.test(html) ? 'OK' : 'MISSING');
-  // robots
-  if (route === '/404/') fail(`[404] noindex`, /name="robots" content="noindex,follow"/.test(html) ? 'OK' : 'MISSING');
-  else fail(`[${route}] no robots noindex`, !/noindex/.test((html.match(/name="robots"[^>]*content="([^"]*)"/) || [])[1] || '') ? 'OK' : 'FOUND-noindex');
+  // robots: صفحة 404 والصفحات القانونية noindex، والصفحة الرئيسية بلا noindex
+  const robotsContent = (html.match(/name="robots"[^>]*content="([^"]*)"/) || [])[1] || '';
+  const wantNoindex = route === '/404/' || ['/cookie-settings/', '/privacy-policy/', '/terms/'].includes(route);
+  fail(`[${route}] robots ${wantNoindex ? 'noindex' : 'index'}`, /noindex/.test(robotsContent) === wantNoindex ? 'OK' : (robotsContent || 'MISSING'));
   // viewport بلا maximum-scale
   fail(`[${route}] viewport`, /maximum-scale|user-scalable/.test(html) ? 'maximum-scale-FOUND' : 'OK');
   // h1 وحيد
@@ -85,7 +86,7 @@ for (const f of htmls) {
 const idx = await readFile(join(root, 'index.html'), 'utf8');
 const h1Text = ((idx.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/) || [])[1] || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 fail('index h1 has name+city', /حديقة الملك فهد المركزية/.test(h1Text) && /المدينة المنورة/.test(h1Text) ? 'OK' : h1Text);
-fail('index FAQ visible (13)', ((idx.match(/<summary/g) || []).length) === 13 ? 'OK' : String((idx.match(/<summary/g) || []).length));
+fail('index FAQ visible (>=18)', ((idx.match(/<summary/g) || []).length) >= 18 ? `OK(${(idx.match(/<summary/g) || []).length})` : String((idx.match(/<summary/g) || []).length));
 fail('index weather ok', idx.includes('حالة الطقس الآن') ? 'OK' : 'FALLBACK');
 fail('index weather no fallback', !idx.includes('تعذّر جلب بيانات الطقس') ? 'OK' : 'FALLBACK');
 
@@ -97,16 +98,16 @@ for (const b of blocks) {
   else allNodes.push(b);
 }
 const types = allNodes.map((n) => (Array.isArray(n['@type']) ? n['@type'].join('+') : n['@type']));
-const wantTypes = ['TouristAttraction+LocalBusiness', 'FAQPage', 'Organization', 'WebSite', 'WebPage'];
+const wantTypes = ['TouristAttraction+Park+LocalBusiness', 'FAQPage', 'Organization', 'WebSite', 'WebPage'];
 fail('jsonld types', wantTypes.every((t) => types.includes(t)) ? `OK(${types.length})` : types.join(' | '));
 const attraction = allNodes.find((n) => JSON.stringify(n['@type']).includes('TouristAttraction'));
 if (attraction) {
   const j = (v) => (v === true || v === false ? v : v == null ? 'MISSING' : typeof v === 'string' ? (v.startsWith(DOMAIN) ? v.replace(DOMAIN, '') : v) : JSON.stringify(v));
   fail('ld tourist url', attraction.url === DOMAIN + '/' ? 'OK' : j(attraction.url));
   fail('ld tourist @id', /#king-fahad-central-park$/.test(attraction['@id'] || '') ? 'OK' : j(attraction['@id']));
-  fail('ld tourist image', (attraction.image || []).length === 1 && attraction.image[0].startsWith(DOMAIN) ? 'OK' : 'CHECK');
+  fail('ld tourist image', (attraction.image || []).length >= 6 && attraction.image.every((i) => i.startsWith(DOMAIN)) ? `OK(${attraction.image.length})` : 'CHECK');
   fail('ld tourist geo', attraction.geo && Math.abs(attraction.geo.latitude - 24.420040678219355) < 1e-9 && Math.abs(attraction.geo.longitude - 39.603600277155515) < 1e-9 ? 'OK' : 'CHECK');
-  fail('ld tourist rating', attraction.aggregateRating && attraction.aggregateRating.ratingValue === 4.2 && attraction.aggregateRating.reviewCount === 25536 ? 'OK' : 'CHECK');
+  fail('ld tourist rating', attraction.aggregateRating && attraction.aggregateRating.ratingValue === 4.2 && attraction.aggregateRating.reviewCount === 25607 ? 'OK' : 'CHECK');
   const oh = attraction.openingHoursSpecification?.[0];
   fail('ld tourist hours', oh && oh.opens === '16:00' && oh.closes === '23:59' && oh.dayOfWeek?.length === 7 ? 'OK' : 'CHECK');
   fail('ld tourist free', attraction.isAccessibleForFree === true && attraction.publicAccess === true ? 'OK' : 'CHECK');
@@ -115,7 +116,7 @@ if (attraction) {
   fail('ld tourist NAP', attraction.address && attraction.address.postalCode === '42383' && attraction.address.addressCountry === 'SA' && attraction.address.addressRegion ? 'OK' : 'CHECK');
 }
 const faqLd = allNodes.find((n) => n['@type'] === 'FAQPage');
-fail('ld faq 13', faqLd && faqLd.mainEntity?.length === 13 ? 'OK' : 'CHECK');
+fail('ld faq 18', faqLd && faqLd.mainEntity?.length >= 18 ? `OK(${faqLd.mainEntity?.length})` : 'CHECK');
 fail('ld graph org+site+page', types.includes('Organization') && types.includes('WebSite') && types.includes('WebPage') ? 'OK' : 'MISSING');
 const page = allNodes.find((n) => n['@type'] === 'WebPage');
 fail('ld webpage dates', page && page.datePublished && page.dateModified === page.datePublished ? `OK(${page.dateModified})` : 'CHECK');
@@ -147,7 +148,8 @@ const sm0 = (smIndex.match(/<loc>([^<]+sitemap-0\.xml)<\/loc>/) || [])[1];
 fail('sitemap-index', sm0 ? `OK(${sm0})` : 'MISSING');
 const smBody = await readFile(join(root, sm0.split('/').pop()), 'utf8');
 const locs = [...smBody.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]).sort();
-const smWant = [DOMAIN + '/', DOMAIN + '/cookie-settings/', DOMAIN + '/privacy-policy/', DOMAIN + '/terms/'];
+// الصفحات القانونية مستثناة من sitemap عمداً (noindex) لتركيز الزحف على الصفحة الرئيسية.
+const smWant = [DOMAIN + '/'];
 fail('sitemap urls', JSON.stringify(locs) === JSON.stringify(smWant) ? 'OK' : locs.join(' '));
 fail('sitemap no 404', !smBody.includes('404') ? 'OK' : 'FOUND');
 fail('sitemap host', locs.every((u) => u.startsWith(DOMAIN)) ? 'OK' : 'CHECK');

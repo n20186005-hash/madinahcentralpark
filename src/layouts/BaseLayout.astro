@@ -23,7 +23,11 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <meta name="viewport" content="width=device-width" />
     <meta name="theme-color" content="#173324" />
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex,follow" />}
+    {noindex ? (
+      <meta name="robots" content="noindex,follow" />
+    ) : (
+      <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    )}
     <title>{title}</title>
     {absolutePageUrl && <link rel="canonical" href={absolutePageUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -38,6 +42,7 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <meta name="apple-mobile-web-app-title" content="حديقة الملك فهد المركزية" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ar_SA" />
+    <meta property="og:site_name" content="حديقة الملك فهد المركزية بالمدينة المنورة" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {absolutePageUrl && <meta property="og:url" content={absolutePageUrl} />}
@@ -45,6 +50,8 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <meta property="og:image:alt" content="المساحات الخضراء والأشجار في حديقة الملك فهد المركزية بالمدينة المنورة" />
     {absoluteImageUrl && <meta name="twitter:image" content={absoluteImageUrl} />}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     {ldItems.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)}></script>)}
     <script is:inline>
       (() => {
