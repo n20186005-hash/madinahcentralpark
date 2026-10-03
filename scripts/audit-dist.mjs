@@ -107,7 +107,7 @@ if (attraction) {
   fail('ld tourist @id', /#king-fahad-central-park$/.test(attraction['@id'] || '') ? 'OK' : j(attraction['@id']));
   fail('ld tourist image', (attraction.image || []).length >= 6 && attraction.image.every((i) => i.startsWith(DOMAIN)) ? `OK(${attraction.image.length})` : 'CHECK');
   fail('ld tourist geo', attraction.geo && Math.abs(attraction.geo.latitude - 24.420040678219355) < 1e-9 && Math.abs(attraction.geo.longitude - 39.603600277155515) < 1e-9 ? 'OK' : 'CHECK');
-  fail('ld tourist rating', attraction.aggregateRating && attraction.aggregateRating.ratingValue === 4.2 && attraction.aggregateRating.reviewCount === 25610 ? 'OK' : 'CHECK');
+  fail('ld tourist rating', attraction.aggregateRating && attraction.aggregateRating.ratingValue === 4.2 && attraction.aggregateRating.reviewCount === 25614 ? 'OK' : 'CHECK');
   const oh = attraction.openingHoursSpecification?.[0];
   fail('ld tourist hours', oh && oh.opens === '16:00' && oh.closes === '23:59' && oh.dayOfWeek?.length === 7 ? 'OK' : 'CHECK');
   fail('ld tourist free', attraction.isAccessibleForFree === true && attraction.publicAccess === true ? 'OK' : 'CHECK');

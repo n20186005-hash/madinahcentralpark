@@ -24,7 +24,7 @@ const faqs = [
   ['هل يوجد ممشى طويل للمشي والجري داخل الحديقة؟', 'تذكر مصادر الأمانة وجود مسارات مخصصة للمشي والجري وركوب الدراجات ضمن مرافق الحديقة، إضافة إلى ممرات واسعة تربط المساحات الخضراء بالبحيرة الاصطناعية. يُنصح بالالتزام بالممرات المخصصة ومراعاة العائلات والأطفال، خاصة في ساعات الذروة المسائية.'],
   ['أين أجد صور حديقة الملك فهد المركزية؟', 'تعرض هذه الصفحة معرضاً بصور لأبرز عناصر الحديقة: المساحات الخضراء والأشجار، النوافير والعناصر المائية، مناطق ألعاب الأطفال، الممشى ومسارات الحركة، أجواء المساء، والمداخل. وللاطلاع على صور الزوّار المحدثة، راجع بطاقة الحديقة على خرائط Google.'],
   ['هل توجد رسوم دخول؟', 'لا تذكر المصادر السياحية المستخدمة رسوماً عامة ثابتة للدخول إلى المساحات المفتوحة في الحديقة. قد تكون لبعض الفعاليات أو المرافق أو الخدمات الداخلية رسوم مستقلة، لذا من الأفضل التحقق منها عند الزيارة.'],
-  ['ما تقييم زوّار حديقة الملك فهد المركزية؟', 'يظهر للحديقة تقييم مرتفع على منصات التقييم العامة يُقدَّر بنحو 4.2 من 5 بناءً على أكثر من 25 ألف تقييم (نحو 25,610 تقييماً في أحدث لقطة)، وقد يختلف الظاهر قليلاً بين المنصة والموسم. راجع بطاقة الموقع على خرائط Google للاطلاع على أحدث التقييمات والصور المرفوعة من الزوّار.'],
+  ['ما تقييم زوّار حديقة الملك فهد المركزية؟', 'يظهر للحديقة تقييم مرتفع على منصات التقييم العامة يُقدَّر بنحو 4.2 من 5 بناءً على أكثر من 25 ألف تقييم (نحو 25,614 تقييماً في أحدث لقطة)، وقد يختلف الظاهر قليلاً بين المنصة والموسم. راجع بطاقة الموقع على خرائط Google للاطلاع على أحدث التقييمات والصور المرفوعة من الزوّار.'],
   ['هل تتوفر مواقف للسيارات؟', 'نعم. تذكر أمانة منطقة المدينة المنورة وجود ثمانية مواقف رئيسية بمساحة إجمالية تقارب عشرين ألف متر مربع، إضافة إلى مواقف طولية مرتبطة بمشروع تطوير الحديقة.'],
   ['كم من الوقت أحتاج لزيارة الحديقة؟', 'للتنزه الهادئ ومشاهدة أبرز المساحات الخضراء والبحيرة والممرات، يناسب معظم الزوار تخصيص نحو ساعتين إلى ثلاث ساعات. قد تحتاج مدة أطول عند حضور فعالية أو تناول الطعام داخل المنطقة.'],
   ['هل الحديقة مناسبة للعائلات والأطفال؟', 'تصف الجهات المحلية الحديقة كوجهة اجتماعية وعائلية، وتذكر وجود مناطق لعب للأطفال ومسارات للمشي والجري وركوب الدراجات ومساحات جلوس ومرافق ترفيهية وثقافية.'],
@@ -81,7 +81,7 @@ const attractionSchema = {
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: 4.2,
-    reviewCount: 25610,
+    reviewCount: 25614,
     bestRating: 5,
     worstRating: 1
   },
@@ -122,8 +122,8 @@ const breadcrumbSchema = siteUrl
     }
   : undefined;
 
-const pageTitle = 'حديقة الملك فهد المركزية بالمدينة المنورة | المواعيد، الموقع، الأنشطة والصور';
-const pageDesc = 'مواعيد زيارة حديقة الملك فهد المركزية بالمدينة المنورة (Madinah Central Park) وأوقات العمل اليومية، الموقع على خريطة Google والمواقف، الأنشطة العائلية والمرافق، صور الحديقة وحالة الطقس. خطط لزيارتك الآن.';
+const pageTitle = 'حديقة الملك فهد المركزية بالمدينة المنورة: المواعيد والموقع والصور';
+const pageDesc = 'دليل زيارة حديقة الملك فهد المركزية بالمدينة المنورة: المواعيد، الموقع على الخريطة، الممشى، المواقف، الأنشطة، الصور ونصائح الزيارة قبل الذهاب.';
 const pageDate = '2026-09-04';
 
 const graphSchema = siteUrl
@@ -186,10 +186,10 @@ const graphSchema = siteUrl
     <div class="relative mx-auto grid min-h-[76vh] max-w-7xl items-end gap-8 px-5 pb-16 pt-28 lg:grid-cols-[1.1fr_.55fr] lg:px-8 lg:pb-24">
       <div>
         <p class="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-black backdrop-blur">حي الحديقة · المدينة المنورة · المملكة العربية السعودية</p>
-        <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">حديقة الملك فهد المركزية <span class="mt-3 block text-3xl font-black leading-snug text-gold-400 sm:text-4xl">المدينة المنورة · المملكة العربية السعودية</span></h1>
+        <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">حديقة الملك فهد المركزية <span class="mt-3 block text-3xl font-black leading-snug text-gold-400 sm:text-4xl">في المدينة المنورة</span></h1>
         <p class="mt-6 max-w-3xl text-xl leading-10 text-sand-100/92">واحة حضرية واسعة تجمع الأشجار والظلال ومسارات الحركة والمرافق العائلية والثقافية، على مسافة تقارب خمسة كيلومترات جنوب المسجد النبوي.</p>
         <div class="mt-7 flex flex-wrap gap-3 text-sm font-black">
-          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">★ 4.2 · 25,610 تقييماً</span>
+          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">★ 4.2 · 25,614 تقييماً</span>
           <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">حديقة عامة</span>
           <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">CJC4+2F</span>
         </div>
@@ -203,6 +203,20 @@ const graphSchema = siteUrl
         </dl>
         <a href="https://maps.app.goo.gl/o2EdMT6dC5qwHHun7" target="_blank" rel="noopener noreferrer" class="mt-6 block rounded-full bg-white px-5 py-3 text-center font-black text-palm-900 no-underline">الاتجاهات عبر خرائط Google</a>
       </aside>
+    </div>
+  </section>
+
+  <section class="border-b border-palm-900/10 bg-palm-900 py-10 text-white lg:py-12">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <p class="text-sm font-black text-gold-400">معلومات سريعة</p>
+      <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">📍</span><div><p class="font-black">الموقع</p><p class="mt-1 text-sm leading-7 text-sand-100/80">حي الحديقة، المدينة المنورة</p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🕓</span><div><p class="font-black">المواعيد</p><p class="mt-1 text-sm leading-7 text-sand-100/80"><a class="text-gold-400 no-underline hover:underline" href="#مواعيد-الزيارة">الفترة المسائية، تحقق من الساعات الحالية</a></p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🎟️</span><div><p class="font-black">رسوم الدخول</p><p class="mt-1 text-sm leading-7 text-sand-100/80">تحقق من الرسوم الحالية للفعاليات والمرافق</p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🚗</span><div><p class="font-black">مواقف السيارات</p><p class="mt-1 text-sm leading-7 text-sand-100/80">متوفرة في نطاق الحديقة</p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🚶</span><div><p class="font-black">ممشى</p><p class="mt-1 text-sm leading-7 text-sand-100/80"><a class="text-gold-400 no-underline hover:underline" href="#المرافق">مسارات للمشي والجري</a></p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🗺️</span><div><p class="font-black">الاتجاهات</p><p class="mt-1 text-sm leading-7 text-sand-100/80"><a class="text-gold-400 no-underline hover:underline" href="https://maps.app.goo.gl/o2EdMT6dC5qwHHun7" target="_blank" rel="noopener noreferrer">عرض على خرائط Google</a></p></div></li>
+      </ul>
     </div>
   </section>
 
@@ -259,7 +273,7 @@ const graphSchema = siteUrl
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <div class="max-w-3xl">
         <p class="text-sm font-black text-gold-600">أوقات العمل</p>
-        <h2 class="mt-3 text-4xl font-black leading-tight text-palm-900 sm:text-5xl">مواعيد زيارة حديقة الملك فهد المركزية</h2>
+        <h2 class="mt-3 text-4xl font-black leading-tight text-palm-900 sm:text-5xl">مواعيد زيارة حديقة الملك فهد المركزية بالمدينة المنورة</h2>
         <p class="mt-5 text-lg leading-9 text-palm-900/70">تذكر الأدلة المحلية أن زيارة الحديقة تكون يومياً في الفترة المسائية، وتورد بعض المنصات نطاقاً شائعاً من الرابعة مساءً حتى منتصف الليل. الساعات قابلة للتغيير في المواسم والفعاليات، لذا يُنصح بالتحقق من المصدر الرسمي قبل الانطلاق.</p>
       </div>
       <div class="mt-10 overflow-x-auto rounded-[2rem] border border-palm-900/10 bg-white">
