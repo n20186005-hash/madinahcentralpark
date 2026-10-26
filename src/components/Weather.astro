@@ -164,7 +164,7 @@ if (ok) {
             <dl class="mt-7 grid grid-cols-2 gap-3 border-t border-white/15 pt-6 text-center text-sm">
               <div><dt class="text-white/60">الإحساس</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.apparent_temperature)}°</dd></div>
               <div><dt class="text-white/60">الرطوبة</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(current.relative_humidity_2m)}٪</dd></div>
-              <div><dt class="text-white/60">الرياح</dt><dd class="mt-1 text-lg font-black" dir="ltr">{Math.round(windNow)} <span class="text-xs font-bold text-white/60">كم/س · {windLvl}</span></dd></div>
+              <div><dt class="text-white/60">سرعة الرياح في اللقطة</dt><dd class="mt-1 text-lg font-black"><bdi dir="ltr">{Math.round(windNow)} كم/س</bdi><span class="mt-1 block text-xs font-bold leading-6 text-white/60">أقصى قوة رياح اليوم (من القراءة الحالية والحد اليومي): <bdi dir="ltr">{windLvl} Bft</bdi> — مقياس بوفورت</span></dd></div>
               <div><dt class="text-white/60">الأشعة فوق البنفسجية</dt><dd class="mt-1 text-lg font-black" dir="ltr">{uvMax} <span class="text-xs font-bold text-white/60">{uvLabel(uvMax)}</span></dd></div>
             </dl>
             <p class="mt-4 rounded-2xl bg-white/10 px-4 py-3 text-center text-sm font-black">
