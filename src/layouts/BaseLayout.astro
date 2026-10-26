@@ -11,7 +11,7 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description, image = '/images/king-fahd-central-park-hero.jpg', jsonLd, noindex = false } = Astro.props;
+const { title, description, image = '/images/park-concept.svg', jsonLd, noindex = false } = Astro.props;
 const absolutePageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const absoluteImageUrl = Astro.site ? new URL(image, Astro.site).href : undefined;
 const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
@@ -30,6 +30,8 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     )}
     <title>{title}</title>
     {absolutePageUrl && <link rel="canonical" href={absolutePageUrl} />}
+    <link rel="alternate" hreflang="ar-SA" href={absolutePageUrl} />
+    <link rel="alternate" hreflang="x-default" href={absolutePageUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
@@ -47,29 +49,13 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <meta property="og:description" content={description} />
     {absolutePageUrl && <meta property="og:url" content={absolutePageUrl} />}
     {absoluteImageUrl && <meta property="og:image" content={absoluteImageUrl} />}
-    <meta property="og:image:alt" content="المساحات الخضراء والأشجار في حديقة الملك فهد المركزية بالمدينة المنورة" />
+    <meta property="og:image:alt" content="رسم مفاهيمي أصلي؛ ليس صورة للموقع" />
     {absoluteImageUrl && <meta name="twitter:image" content={absoluteImageUrl} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {ldItems.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)}></script>)}
-    <script is:inline>
-      (() => {
-        const KEY = 'king-fahad-central-park-consent-v1';
-        let consent = null;
-        try { consent = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch {}
-        if (!consent?.analytics || window.__kfcpGAStarted) return;
-        window.__kfcpGAStarted = true;
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = function(){ window.dataLayer.push(arguments); };
-        window.gtag('js', new Date());
-        window.gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
-        const s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
-        document.head.appendChild(s);
-      })();
-    </script>
+    {ldItems.map((item) => <script is:inline type="application/ld+json" set:html={JSON.stringify(item)}></script>)}
+    <script is:inline src="/analytics.js"></script>
   </head>
   <body>
     <Header />

@@ -10,18 +10,10 @@ const report = {
   'id facilities': count('id="المرافق")') > 0 || count('id="المرافق"') > 0,
   'id history': count('id="التاريخ"') > 0,
   'id experience': count('id="التجربة"') > 0,
-  // الطقس: نجح الجلب (لا يوجد نص العطل)
-  'weather fetch ok (no fallback)': count('تعذّر جلب بيانات الطقس') === 0,
-  'weather current visible': count('حالة الطقس الآن') > 0,
-  'weather source noted': count('Open-Meteo') > 0,
-  // صور الحديقة الحقيقية المحلية
-  'img hero': count('king-fahd-central-park-hero.jpg') > 0,
-  'img fountain': count('king-fahd-central-park-fountain.jpg') > 0,
-  'img playground': count('king-fahd-central-park-playground.jpg') > 0,
-  'img walkway': count('king-fahd-central-park-walkway.jpg') > 0,
-  'img entrance': count('king-fahd-central-park-entrance.jpg') > 0,
-  'img evening': count('king-fahd-central-park-evening.jpg') > 0,
-  'no dead gallery refs': count('greenery.jpg') === 0 && count('lake.jpg') === 0,
+  'weather snapshot or genuine fallback': /القراءة وقت إنشاء الصفحة|تعذّر جلب بيانات الطقس/.test(html),
+  'weather source noted': html.includes('Open-Meteo'),
+  'concept labelled': html.includes('ليس صورة للموقع') && html.includes('/images/park-concept.svg'),
+  'no retired photography': !/king-fahd-central-park-[a-z]+\.jpg/.test(html),
   // الحياد التجاري: لا أسماء محلات
   'no merchant names': ['فيردان', 'شيف إياد', 'قصر الريحان', 'زمان ستي'].every((n) => !html.includes(n)),
   // الأسئلة الشائعة

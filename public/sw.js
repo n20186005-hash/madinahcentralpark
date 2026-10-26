@@ -1,6 +1,6 @@
 // Service Worker لدليل حديقة الملك فهد المركزية
 // استراتيجية: ملاحة network-first مع بديل من الكاش، وأصول أخرى cache-first.
-const VERSION = 'kfcp-cache-v1';
+const VERSION = 'kfcp-cache-v2';
 const PRECACHE = [
   '/',
   '/manifest.webmanifest',
@@ -11,12 +11,7 @@ const PRECACHE = [
   '/logo.svg',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
-  '/images/king-fahd-central-park-hero.jpg',
-  '/images/king-fahd-central-park-evening.jpg',
-  '/images/king-fahd-central-park-fountain.jpg',
-  '/images/king-fahd-central-park-entrance.jpg',
-  '/images/king-fahd-central-park-playground.jpg',
-  '/images/king-fahd-central-park-walkway.jpg',
+  '/images/park-concept.svg',
   '/privacy-policy/',
   '/terms/',
   '/cookie-settings/'
@@ -49,12 +44,13 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
+          if(response.status!==200)return response;
           const copy = response.clone();
           caches.open(VERSION).then((cache) => cache.put(request, copy));
           return response;
         })
         .catch(() =>
-          caches.match(request).then((hit) => hit || caches.match('/'))
+          caches.match(request).then((hit) => hit || new Response('Offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}}))
         )
     );
     return;
