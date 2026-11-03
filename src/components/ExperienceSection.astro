@@ -1,6 +1,12 @@
 ---
 // تجربة الزيارة: مسار مقترح وأنواع أماكن تصوير وقواعد احترام — من دون تسمية منشآت.
-const route = [
+interface Props {
+  lang?: 'ar' | 'en';
+}
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
+
+const routeAr = [
   { title: 'الوصول والمواقف', body: 'وجّه تطبيق الخرائط إلى «حديقة الملك فهد المركزية» أو الرمز CJC4+2F، واختر أحد المواقف الرئيسية القريبة من المدخل، واقرأ لوحات التوجيه عند الدخول.' },
   { title: 'نزهة على الممشى', body: 'امشِ في المسارات الرئيسية وسط المسطحات الخضراء والأشجار، وهي ممرات مناسبة أيضاً للجري الخفيف وركوب الدراجات في المناطق المخصصة.' },
   { title: 'البحيرة ومناطق الجلوس', body: 'توقّف عند البحيرة الاصطناعية والجلسات المحيطة بها للاستراحة، واختر موقعك بعيداً عن ممرات الدراجات الأساسية.' },
@@ -9,7 +15,16 @@ const route = [
   { title: 'جولة الختام', body: 'عدّل الجولة حسب الحرارة والقدرة وساعات الدخول المؤكدة. راقب لوحات المرفق والفعالية ولا تفترض استمرار التشغيل بعد وقت معين.' }
 ];
 
-const photoSpots = [
+const routeEn = [
+  { title: 'Arrival and parking', body: 'Set the maps app to “King Fahd Central Park” or the code CJC4+2F, choose one of the main car parks near the entrance, and read the guidance signs on entering.' },
+  { title: 'A stroll on the walkway', body: 'Walk along the main paths among the green areas and trees; these paths are also suitable for light jogging and cycling in the designated areas.' },
+  { title: 'The lake and seating areas', body: 'Stop at the artificial lake and the seating around it to rest, and choose your spot away from the main cycling lanes.' },
+  { title: 'Family and children’s facilities', body: 'With children, head to the designated play areas inside the park, and make sure to supervise them directly, especially during the busy evening hours.' },
+  { title: 'Food services and events', body: 'You may find a food-services and café area or seasonal events within the park and its surroundings; check whether they are available that day before relying on them.' },
+  { title: 'Closing the tour', body: 'Adjust the tour according to the heat, your ability and the confirmed opening hours. Watch the facility and event signs and do not assume operation continues after a certain time.' }
+];
+
+const photoSpotsAr = [
   'المداخل والبوابات وسط الخلفية الخضراء',
   'البحيرة الاصطناعية في الساعة الذهبية',
   'المسطحات الخضراء من زاوية منخفضة',
@@ -17,7 +32,15 @@ const photoSpots = [
   'سوق العينية والحي التراثي أثناء الفعاليات'
 ];
 
-const dos = [
+const photoSpotsEn = [
+  'Entrances and gates against the green backdrop',
+  'The artificial lake at golden hour',
+  'The green areas from a low angle',
+  'The walkway from a permitted path',
+  'Souq Al-Ainiah and the heritage district during events'
+];
+
+const dosAr = [
   'احترم خصوصية العائلات والزوار عند التصوير',
   'استخدم الحاويات وحافظ على نظافة المكان',
   'راقب الأطفال قرب المياه والطرقات والممرات',
@@ -25,20 +48,41 @@ const dos = [
   'راجع جدول الفعاليات والمواعيد الموسمية (رمضان والأعياد)'
 ];
 
-const donts = [
+const dosEn = [
+  'Respect the privacy of families and visitors when photographing',
+  'Use the bins and keep the place clean',
+  'Watch children near the water, roads and lanes',
+  'Follow the guidance signs and the designated cycling lanes',
+  'Check the events schedule and seasonal timings (Ramadan and the holidays)'
+];
+
+const dontsAr = [
   'لا تكسر المسطحات الخضراء أو الأغصان أو تتلف المزروعات',
   'لا تشعل ناراً أو تشوياً إلا في المواقع المصرح بها (إن وُجدت)',
   'لا تقود الدراجة في مناطق المشاة المخصصة',
   'لا تترك ممتلكاتك دون مراقبة في الأماكن المزدحمة',
   'لا تصوّر أشخاصاً دون موافقتهم في الأجواء العائلية'
 ];
+
+const dontsEn = [
+  'Do not break the green areas or branches or damage the plants',
+  'Do not light a fire or barbecue except in authorised places (if any)',
+  'Do not ride a bicycle in the designated pedestrian areas',
+  'Do not leave your belongings unattended in crowded places',
+  'Do not photograph people without their consent in family settings'
+];
+
+const route = isEn ? routeEn : routeAr;
+const photoSpots = isEn ? photoSpotsEn : photoSpotsAr;
+const dos = isEn ? dosEn : dosAr;
+const donts = isEn ? dontsEn : dontsAr;
 ---
-<section id="التجربة" class="bg-sand-50 py-16 lg:py-24">
+<section id={isEn ? 'experience' : 'التجربة'} class="bg-sand-50 py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="max-w-3xl">
-      <p class="text-sm font-black text-gold-600">دليل الاستمتاع بالزيارة</p>
-      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">تجربة زيارة مرنة بحسب الأجزاء المفتوحة</h2>
-      <p class="mt-5 text-lg leading-9 text-palm-900/70">مسار مرن يناسب الأفراد والعائلات، ويستغرق تعديله بحسب ما هو متاح فعلاً في يوم زيارتك من فعاليات وخدمات.</p>
+      <p class="text-sm font-black text-gold-600">{isEn ? 'A guide to enjoying your visit' : 'دليل الاستمتاع بالزيارة'}</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">{isEn ? 'A flexible visit experience depending on the parts that are open' : 'تجربة زيارة مرنة بحسب الأجزاء المفتوحة'}</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">{isEn ? 'A flexible route that suits individuals and families, and takes adjusting according to the events and services actually available on the day of your visit.' : 'مسار مرن يناسب الأفراد والعائلات، ويستغرق تعديله بحسب ما هو متاح فعلاً في يوم زيارتك من فعاليات وخدمات.'}</p>
     </div>
 
     <div class="mt-10 grid gap-6 lg:grid-cols-[1.25fr_.75fr]">
@@ -56,7 +100,7 @@ const donts = [
 
       <div class="space-y-6">
         <article class="rounded-[2rem] border border-palm-900/10 bg-white p-6">
-          <h3 class="text-xl font-black text-palm-900">📸 أماكن تصوير عامة</h3>
+          <h3 class="text-xl font-black text-palm-900">{isEn ? '📸 Public photo spots' : '📸 أماكن تصوير عامة'}</h3>
           <ul class="mt-4 space-y-3">
             {photoSpots.map((spot) => (
               <li class="flex items-start gap-3 text-sm leading-7 text-palm-900/72"><span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-gold-400" aria-hidden="true"></span>{spot}</li>
@@ -65,7 +109,7 @@ const donts = [
         </article>
 
         <article class="rounded-[2rem] bg-palm-900 p-6 text-white">
-          <h3 class="text-xl font-black">✅ نصائح يحترمها الزوار</h3>
+          <h3 class="text-xl font-black">{isEn ? '✅ Etiquette respected by visitors' : '✅ نصائح يحترمها الزوار'}</h3>
           <ul class="mt-4 space-y-3">
             {dos.map((item) => (
               <li class="flex items-start gap-3 text-sm leading-7 text-white/82"><span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-gold-400" aria-hidden="true"></span>{item}</li>
@@ -74,7 +118,7 @@ const donts = [
         </article>
 
         <article class="rounded-[2rem] border border-clay-500/30 bg-clay-500/10 p-6">
-          <h3 class="text-xl font-black text-clay-500">⚠️ سلوكيات يُنصح بتجنبها</h3>
+          <h3 class="text-xl font-black text-clay-500">{isEn ? '⚠️ Behaviours best avoided' : '⚠️ سلوكيات يُنصح بتجنبها'}</h3>
           <ul class="mt-4 space-y-3">
             {donts.map((item) => (
               <li class="flex items-start gap-3 text-sm leading-7 text-palm-900/72"><span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-clay-500" aria-hidden="true"></span>{item}</li>

@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import GuideCard from '../../../components/GuideCard.astro';
+import { PARK } from '../../../lib/parkGuide';
+import { CATEGORIES, englishGuides, guidePathEn } from '../../../data/guides';
+
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const arUrl = Astro.site ? new URL('/guides/', Astro.site).href : undefined;
+const pageTitle = 'King Fahad Central Park, Madinah: Visitor Guides';
+const pageDescription =
+  'Independent visitor guides to King Fahad Central Park in Madinah: opening hours, location, photos, the walkway, family facilities, culture and the heritage market, food, half-day plans, and getting there from the airport or the Haramain train.';
+
+const categories = CATEGORIES.map((category) => ({
+  ...category,
+  guides: englishGuides.filter((guide) => guide.category === category.id)
+})).filter((category) => category.guides.length > 0);
+
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  ...(pageUrl ? { '@id': `${pageUrl}#collection` } : {}),
+  name: pageTitle,
+  description: pageDescription,
+  inLanguage: 'en',
+  about: { '@type': ['TouristAttraction', 'Park'], name: PARK.nameEn },
+  hasPart: englishGuides.map((guide) => ({
+    '@type': 'Article',
+    headline: guide.en?.h1 ?? guide.h1,
+    ...(Astro.site ? { url: new URL(guidePathEn(guide.slug), Astro.site).href } : {})
+  }))
+};
+
+const alternates = [
+  { hreflang: 'ar-SA', href: arUrl },
+  { hreflang: 'en', href: pageUrl },
+  { hreflang: 'x-default', href: arUrl }
+];
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  jsonLd={[listSchema]}
+  lang="en"
+  dir="ltr"
+  siteName="King Fahad Central Park, Madinah"
+  ogLocale="en_US"
+  alternates={alternates}
+>
+  <header class="relative isolate overflow-hidden bg-night-950 text-white">
+    <div class="oasis-grid absolute inset-0 opacity-40" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-5xl px-5 pb-14 pt-24 lg:px-8 lg:pb-16">
+      <nav aria-label="Breadcrumb" class="flex flex-wrap items-center gap-2 text-xs font-black text-sand-100/70">
+        <a class="text-sand-100/80 no-underline hover:text-gold-400" href="/en/">Home</a>
+        <span aria-hidden="true">›</span>
+        <span>Visitor guides</span>
+      </nav>
+      <a class="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-400/50 px-4 py-1.5 text-xs font-black text-gold-400 no-underline hover:bg-gold-400/10" href="/guides/" hreflang="ar" lang="ar">اقرأ هذه الصفحة بالعربية</a>
+      <h1 class="mt-6 text-4xl font-black leading-tight sm:text-5xl">King Fahad Central Park visitor guides</h1>
+      <p class="mt-5 max-w-3xl text-lg leading-9 text-sand-100/85">
+        An independent set of guides that answers visitor questions before and after arrival: hours, location, photos and the walkway; facilities and family needs; culture and the heritage market; food; half-day plans; and getting there from the airport or the Haramain high-speed train.
+      </p>
+      <p class="mt-6 text-sm font-black text-gold-400">{englishGuides.length} guides in six sections</p>
+    </div>
+  </header>
+
+  <nav aria-label="Guide sections" class="sticky top-[52px] z-40 border-b border-palm-900/10 bg-sand-50/95 backdrop-blur-xl lg:top-[60px]">
+    <div class="mx-auto max-w-7xl overflow-x-auto px-5 py-3 lg:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div class="flex w-max gap-2 text-[12px] font-black text-palm-900">
+        {categories.map((category) => (
+          <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline hover:border-gold-400" href={`#${category.id}`}>{category.labelEn}</a>
+        ))}
+      </div>
+    </div>
+  </nav>
+
+  {categories.map((category) => (
+    <section id={category.id} class="border-b border-palm-900/10 bg-sand-50 py-14 lg:py-20">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8">
+        <div class="grid gap-6 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+          <h2 class="text-3xl font-black text-palm-900 sm:text-4xl">{category.labelEn}</h2>
+          <p class="text-base leading-8 text-palm-900/68">{category.noteEn}</p>
+        </div>
+        <div class="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {category.guides.map((guide) => <GuideCard guide={guide} lang="en" />)}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <h2 class="text-3xl font-black text-palm-900">How we source these guides</h2>
+      <p class="mt-4 leading-9 text-palm-900/70">
+        Every guide separates what official bodies publish from third-party snapshots that change over time, and states the disagreement between sources rather than asserting an unsupported figure. Hours, fees and distances can change, so confirm with the operator before you visit.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a class="rounded-full bg-palm-900 px-5 py-3 text-sm font-black text-white no-underline hover:bg-palm-700" href={PARK.mapsUrl} target="_blank" rel="noopener noreferrer">Directions to the park</a>
+        <a class="rounded-full border border-palm-900/20 bg-white px-5 py-3 text-sm font-black text-palm-900 no-underline hover:border-gold-400" href="/en/#sources">Guide sources</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

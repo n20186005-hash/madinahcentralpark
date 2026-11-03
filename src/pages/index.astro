@@ -8,10 +8,20 @@ import TransportSection from '../components/TransportSection.astro';
 import SeasonalStrategy from '../components/SeasonalStrategy.astro';
 import Itineraries from '../components/Itineraries.astro';
 import VisitorResponsibility from '../components/VisitorResponsibility.astro';
+import GuideCard from '../components/GuideCard.astro';
+import { CATEGORY_WITH_GUIDES, allGuides } from '../data/guides';
+import { MAPS_SNAPSHOT, PARK } from '../lib/parkGuide';
 
 const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
+const enSiteUrl = Astro.site ? new URL('/en/', Astro.site).href : undefined;
 const heroUrl = Astro.site ? new URL('/images/park-concept.svg', Astro.site).href : undefined;
 const entityId = siteUrl ? `${siteUrl}#king-fahad-central-park` : undefined;
+
+const alternates = [
+  { hreflang: 'ar-SA', href: siteUrl },
+  { hreflang: 'en', href: enSiteUrl },
+  { hreflang: 'x-default', href: siteUrl }
+];
 
 const faqs = [
   [
@@ -20,7 +30,7 @@ const faqs = [
   ],
   [
     "ما مواعيد زيارة الحديقة؟",
-    "في لقطة خرائط Google بتاريخ 25 أكتوبر 2026 ظهر المكان مفتوحاً 24 ساعة طوال الأسبوع. لكن صفحة منصة المدينة التابعة لهيئة تطوير المنطقة تصف الزيارة اليومية في الفترة المسائية فقط، من دون ساعات رقمية. تحقق من اللوحات والجهة المشغلة؛ لا تعني بطاقة المكان أن جميع المرافق أو الفعاليات تعمل طوال اليوم."
+    "في لقطة خرائط Google بتاريخ " + MAPS_SNAPSHOT.date + " ظهر المكان مفتوحاً 24 ساعة طوال الأسبوع. لكن صفحة منصة المدينة التابعة لهيئة تطوير المنطقة تصف الزيارة اليومية في الفترة المسائية فقط، من دون ساعات رقمية. تحقق من اللوحات والجهة المشغلة؛ لا تعني بطاقة المكان أن جميع المرافق أو الفعاليات تعمل طوال اليوم."
   ],
   [
     "هل تتغير المواعيد في رمضان والأعياد؟",
@@ -40,7 +50,7 @@ const faqs = [
   ],
   [
     "ما تقييمها على الخرائط؟",
-    "في 25 أكتوبر 2026 عرضت خرائط Google تقييماً 4.2 من 5 من 25,678 تقييماً. هذه لقطة لطرف ثالث قابلة للتغير، وليست تقييماً جمعه هذا الدليل."
+    "في " + MAPS_SNAPSHOT.date + " عرضت خرائط Google تقييماً " + MAPS_SNAPSHOT.rating + " من 5 من " + MAPS_SNAPSHOT.reviews.toLocaleString('en-US') + " تقييماً. هذه لقطة لطرف ثالث قابلة للتغير، وليست تقييماً جمعه هذا الدليل."
   ],
   [
     "هل توجد مواقف؟",
@@ -81,6 +91,26 @@ const faqs = [
   [
     "متى تقام الفعاليات؟",
     "تصف المصادر فعاليات ثقافية وترفيهية تاريخية، لكن هذا لا يثبت وجود فعالية اليوم. راجع إعلاناً مؤرخاً للمنظم والمكان وسعره وساعاته."
+  ],
+  [
+    "ما طول ممشى الحديقة؟",
+    "في تحديث رسمي للأمانة بتاريخ 1 نوفمبر 2026 وُصف ممشى محيطي بطول 1500 متر وعرض 12 متراً، مع 14 نقطة استراحة وثلاثة منحدرات لذوي الإعاقة ومسار دراجات بمساحة تقارب 7,491 م². هذه أرقام المشروع كما نشرتها الأمانة، ولا تثبت أن كل جزء منه مفتوح اليوم."
+  ],
+  [
+    "هل يوجد مسار مخصص للدراجات؟",
+    "تذكر المصادر الرسمية مساراً للدراجات ضمن أعمال الممشى المحيطي. لم نجد نصاً رسمياً يوضح هل المسار مفصول فيزيائياً عن مسار المشي، لذا التزم باللوحات الأرضية عند الوصول."
+  ],
+  [
+    "هل الدخول إلى الحي التراثي مجاني؟",
+    "تذكر روح السعودية أن الدخول من دون تذاكر، وتذكر ساعات مسائية تختلف عن الصياغة البلدية (14:00 حتى 01:00 مقابل 17:00 حتى 03:00). التعارض حقيقي، والأسلم اعتبار الزيارة مسائية والتحقق من اللوحة عند المدخل."
+  ],
+  [
+    "ما ساعات مركز المدينة للفنون؟",
+    "هناك تعارض بين المصادر الرسمية: البوابة الرسمية للمركز تذكر عملاً يومياً من 09:00 إلى 23:00، ومنصة التذاكر المرتبطة به تذكر بدءاً عند 17:00 وانتهاءً عند 23:00 مع إغلاق يوم الأحد. تحقق من المنصة قبل الذهاب إذا كان موعدك نهاريّاً."
+  ],
+  [
+    "كيف أصل من مطار المدينة أو من قطار الحرمين؟",
+    "محطة قطار الحرمين في المدينة المنورة تقع في حي الهدراء على طريق الملك عبد العزيز، وتبعد نحو 9 كم عن المسجد النبوي، وتعمل يومياً حتى منتصف الليل تقريباً مع مواقف بسعة 1000 سيارة. أجرة التاكسي الرسمية من المطار إلى نطاق الحديقة (نحو 18.5 كم) هي 55 ريالاً لسيارة الخمس ركاب و70 ريالاً للسبع ركاب وفق الجدول الرسمي."
   ]
 ];
 
@@ -196,6 +226,7 @@ const graphSchema = siteUrl
   title={pageTitle}
   description={pageDesc}
   jsonLd={[attractionSchema, faqSchema, ...(breadcrumbSchema ? [breadcrumbSchema] : []), ...(graphSchema ? [graphSchema] : [])]}
+  alternates={alternates}
 >
   <section class="relative isolate overflow-hidden bg-night-950 text-white">
     <div class="park-hero-background absolute inset-0 z-0">
@@ -212,9 +243,10 @@ const graphSchema = siteUrl
         <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">حديقة الملك فهد المركزية <span class="mt-3 block text-3xl font-black leading-snug text-gold-400 sm:text-4xl">في المدينة المنورة</span></h1>
         <p class="mt-6 max-w-3xl text-xl leading-10 text-sand-100/92">واحة حضرية واسعة تجمع الأشجار والظلال ومسارات الحركة والمرافق العائلية والثقافية، على مسافة تقارب خمسة كيلومترات جنوب المسجد النبوي.</p>
         <div class="mt-7 flex flex-wrap gap-3 text-sm font-black">
-          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">خرائط Google: <bdi dir="ltr">4.2 / 5 · 25,678</bdi> · 25 أكتوبر 2026</span>
+          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">خرائط Google: <bdi dir="ltr">{MAPS_SNAPSHOT.rating} / 5 · {MAPS_SNAPSHOT.reviews.toLocaleString('en-US')}</bdi> · {MAPS_SNAPSHOT.date}</span>
           <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">حديقة عامة</span>
-          <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">CJC4+2F</span>
+          <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">{PARK.plusCode}</span>
+          <a class="rounded-full border border-gold-400/50 bg-white/10 px-4 py-2 text-gold-400 no-underline hover:bg-gold-400/15" href={enSiteUrl} hreflang="en" lang="en">English guide</a>
         </div>
       </div>
       <aside class="rounded-[2rem] border border-white/15 bg-white/10 p-6 backdrop-blur-xl">
@@ -222,7 +254,7 @@ const graphSchema = siteUrl
         <dl class="mt-5 space-y-5 text-sm leading-7">
           <div><dt class="font-black text-white">العنوان</dt><dd class="text-sand-100/80">حي الحديقة، المدينة المنورة 42383، المملكة العربية السعودية</dd></div>
           <div><dt class="font-black text-white">الإحداثيات</dt><dd class="text-sand-100/80" dir="ltr">24.4200407, 39.6061752</dd></div>
-          <div><dt class="font-black text-white">الزيارة</dt><dd class="text-sand-100/80">لقطة خرائط 25 أكتوبر 2026: 24 ساعة؛ منصة المدينة تصف المساء. تحقق من الدخول الحالي.</dd></div>
+          <div><dt class="font-black text-white">الزيارة</dt><dd class="text-sand-100/80">لقطة خرائط {MAPS_SNAPSHOT.date}: 24 ساعة؛ منصة المدينة تصف المساء. تحقق من الدخول الحالي.</dd></div>
         </dl>
         <a href="https://maps.app.goo.gl/o2EdMT6dC5qwHHun7" target="_blank" rel="noopener noreferrer" class="mt-6 block rounded-full bg-white px-5 py-3 text-center font-black text-palm-900 no-underline">الاتجاهات عبر خرائط Google</a>
       </aside>
@@ -289,7 +321,7 @@ const graphSchema = siteUrl
         <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🎟️</span><h3 class="mt-4 text-xl font-black">التذاكر / الرسوم</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">لا تذكر المصادر السياحية المستخدمة رسماً عاماً ثابتاً لدخول المساحات المفتوحة. قد تُفرض رسوم منفصلة على بعض الفعاليات أو المرافق أو الخدمات.</p></article>
         <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🌙</span><h3 class="mt-4 text-xl font-black">أفضل وقت ومدة الزيارة</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">اختر مدة ومساراً يناسبان قدرتك والطقس وساعات الدخول المؤكدة، مع وقت للراحة والعودة.</p></article>
         <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🅿️</span><h3 class="mt-4 text-xl font-black">مواقف السيارات</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">تذكر الأمانة ثمانية مواقف رئيسية بمساحة إجمالية تقارب 20,000 م²، إضافة إلى مواقف طولية. في الفعاليات الكبيرة يُفضّل الحضور مبكراً.</p></article>
-        <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🕓</span><h3 class="mt-4 text-xl font-black">أوقات الزيارة</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">خرائط Google في 25 أكتوبر 2026: 24 ساعة؛ منصة المدينة: الفترة المسائية. تختلف دلالة المصادر، فتحقق من التشغيل الفعلي للمرفق.</p></article>
+        <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🕓</span><h3 class="mt-4 text-xl font-black">أوقات الزيارة</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">خرائط Google في {MAPS_SNAPSHOT.date}: 24 ساعة؛ منصة المدينة: الفترة المسائية. تختلف دلالة المصادر، فتحقق من التشغيل الفعلي للمرفق.</p></article>
       </div>
     </div>
   </section>
@@ -298,12 +330,36 @@ const graphSchema = siteUrl
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <p class="text-sm font-black text-gold-600">المواعيد ومصدرها</p>
       <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">مواعيد حديقة الملك فهد: اختلاف المصادر</h2>
-      <p class="mt-5 max-w-3xl text-lg leading-9">في 25 أكتوبر 2026 عرضت بطاقة خرائط Google المكان مفتوحاً <bdi dir="ltr">24</bdi> ساعة كل أيام الأسبوع. أما منصة المدينة التابعة لهيئة تطوير المنطقة فتصف فتح الأبواب يومياً في الفترة المسائية، من دون تحديد ساعة.</p>
+      <p class="mt-5 max-w-3xl text-lg leading-9">في {MAPS_SNAPSHOT.date} عرضت بطاقة خرائط Google المكان مفتوحاً <bdi dir="ltr">24</bdi> ساعة كل أيام الأسبوع. أما منصة المدينة التابعة لهيئة تطوير المنطقة فتصف فتح الأبواب يومياً في الفترة المسائية، من دون تحديد ساعة.</p>
       <div class="mt-8 grid gap-5 md:grid-cols-2">
         <article class="rounded-3xl bg-white p-6"><h3 class="font-black">لقطة الخرائط</h3><p class="mt-3 leading-8">هذه معلومة قائمة لطرف ثالث في تاريخ المراجعة، وليست تعهداً من مشغل الحديقة. لا تثبت أن المطاعم والأنشطة والمرافق تعمل طوال اليوم.</p><a href="https://maps.app.goo.gl/o2EdMT6dC5qwHHun7" target="_blank" rel="noopener noreferrer" class="font-bold underline">بطاقة المكان الحالية</a></article>
         <article class="rounded-3xl bg-white p-6"><h3 class="font-black">الوصف الرسمي العام</h3><p class="mt-3 leading-8">صفحة منصة المدينة غير مؤرخة في متنها وتصف الزيارة المسائية. تحقق من اللوحات أو الجهة المشغلة قبل ترتيب وصول مبكر أو متأخر، ومن مواعيد الفعالية بصورة مستقلة.</p><a href="https://visitmadinahsa.com/sa-ar/destinations/حديقة-الملك-فهد" target="_blank" rel="noopener noreferrer" class="font-bold underline">صفحة منصة المدينة</a></article>
       </div>
       <p class="mt-6 text-sm leading-8">لا توجد هنا تعرفة دخول عامة حالية مؤكدة. غياب السعر من الصفحة الرسمية لا يثبت المجانية؛ اسأل عن الدخول والفعالية والخدمات كل على حدة.</p>
+    </div>
+  </section>
+
+  <section id="الممشى" class="border-b border-palm-900/10 bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:items-end">
+        <div>
+          <p class="text-sm font-black text-gold-600">أحدث تحديث رسمي</p>
+          <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">ممشى الحديقة بالأرقام</h2>
+        </div>
+        <p class="text-lg leading-9 text-palm-900/70">
+          نشرت أمانة منطقة المدينة المنورة في 1 نوفمبر 2026 وصفاً لممشى محيطي داخل الحديقة. الأرقام الآتية منشورة كمشروع، وتصف المقاسات لا حالة التشغيل اليوم، فالتزم باللوحات الأرضية عند الوصول.
+        </p>
+      </div>
+      <dl class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">طول الممشى</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterWalkwayLengthM.toLocaleString('en-US')} م</bdi></dd><p class="mt-2 text-sm leading-7 text-palm-900/65">بعرض <bdi dir="ltr">{PARK.perimeterWalkwayWidthM} م</bdi> وفق وصف المشروع الرسمي.</p></div>
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">نقاط الاستراحة</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterWalkwayRestPoints}</bdi> نقطة</dd><p class="mt-2 text-sm leading-7 text-palm-900/65">مع <bdi dir="ltr">{PARK.perimeterWalkwayAccessibleRamps}</bdi> منحدرات مهيأة لذوي الإعاقة.</p></div>
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">مسار الدراجات</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterBikePathAreaSqm.toLocaleString('en-US')} م²</bdi></dd><p class="mt-2 text-sm leading-7 text-palm-900/65">لم نجد نصاً رسمياً يوضح فصل المسار فيزيائياً عن مسار المشي.</p></div>
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">الإضاءة</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterWalkwayVisibleLights + PARK.perimeterWalkwayHiddenLights}</bdi> وحدة</dd><p class="mt-2 text-sm leading-7 text-palm-900/65">منها <bdi dir="ltr">{PARK.perimeterWalkwayVisibleLights}</bdi> ظاهرة و<bdi dir="ltr">{PARK.perimeterWalkwayHiddenLights}</bdi> مخفية وفق وصف المشروع.</p></div>
+      </dl>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="rounded-full bg-palm-900 px-5 py-3 text-sm font-black text-white no-underline hover:bg-palm-700" href="/guides/walkway/">دليل الممشى الكامل</a>
+        <a class="rounded-full border border-palm-900/20 bg-white px-5 py-3 text-sm font-black text-palm-900 no-underline hover:border-gold-400" href="/guides/parking/">مواقف المشروع: <bdi dir="ltr">{PARK.perimeterWalkwayParkingSpaces}</bdi> موقفاً</a>
+      </div>
     </div>
   </section>
 
@@ -335,6 +391,32 @@ const graphSchema = siteUrl
 
   <section class="bg-white py-16 lg:py-24"><figure class="mx-auto max-w-4xl px-5"><h2 class="text-3xl font-black">رسم مفاهيمي لحديقة حضرية</h2><img class="mt-6 w-full rounded-3xl" src="/images/park-concept.svg" alt="رسم أصلي توضيحي لحديقة حضرية؛ ليس صورة للموقع" width="1200" height="800" loading="lazy"/><figcaption class="mt-4 text-sm leading-8">عمل أصلي لهذا الدليل، أكتوبر 2026. لا يمثل الحديقة أو المرافق والمداخل الفعلية. صور الزوار الحالية متاحة عبر بطاقة المكان الخارجية.</figcaption></figure></section>
 
+  <section id="الأدلة" class="leaf-divider border-t border-palm-900/10 bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:items-end">
+        <div>
+          <p class="text-sm font-black text-gold-600">أدلة تفصيلية</p>
+          <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">أدلة الزيارة التفصيلية</h2>
+        </div>
+        <p class="text-lg leading-9 text-palm-900/70">{allGuides.length} دليلاً مستقلاً يغطي المواعيد والموقع والصور والممشى والمرافق والثقافة والطعام وبرامج نصف اليوم والوصول من المطار والقطار. كل دليل يميز بين المصادر الرسمية ولقطات الأطراف الثالثة.</p>
+      </div>
+      <div class="mt-10 space-y-12">
+        {CATEGORY_WITH_GUIDES.map((category) => (
+          <div>
+            <div class="flex flex-wrap items-baseline justify-between gap-3">
+              <h3 class="text-2xl font-black text-palm-900">{category.label}</h3>
+              <p class="text-sm leading-7 text-palm-900/60">{category.note}</p>
+            </div>
+            <div class="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {category.guides.map((guide) => <GuideCard guide={guide} />)}
+            </div>
+          </div>
+        ))}
+      </div>
+      <a class="mt-10 inline-block rounded-full bg-palm-900 px-5 py-3 font-black text-white no-underline hover:bg-palm-700" href="/guides/">تصفح كل الأدلة في صفحة واحدة</a>
+    </div>
+  </section>
+
   <section id="الأسئلة" class="bg-palm-50 py-16 lg:py-24">
     <div class="mx-auto max-w-5xl px-5 lg:px-8">
       <div class="text-center">
@@ -361,6 +443,10 @@ const graphSchema = siteUrl
           <a href="https://www.amana-md.gov.sa/NewsCenter/Details/1064" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">أمانة المنطقة — المشاريع البلدية</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">إعلان حزمة مشاريع شملت تطوير حديقة الملك فهد المركزية (1444هـ).</span></a>
           <a href="https://visitmadinahsa.com/sa-ar/destinations/حديقة-الملك-فهد" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">منصة المدينة</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">وجهة حديقة الملك فهد ضمن محتوى هيئة تطوير منطقة المدينة المنورة.</span></a>
           <a href="https://www.visitsaudi.com/ar" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">روح السعودية</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">البوابة الوطنية للسياحة في المملكة العربية السعودية.</span></a>
+          <a href="https://www.amana-md.gov.sa/NewsCenter/Details/2635" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">أمانة المنطقة — ممشى الحديقة (1 نوفمبر 2026)</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">أحدث تحديث رسمي لممشى محيطي بطول 1500 م وعرض 12 م ومقارنته بممشى القصواء.</span></a>
+          <a href="https://www.hhr.sa/ar/-/madinah" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">قطار الحرمين السريع — محطة المدينة المنورة</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">موقع المحطة في حي الهدراء ومسافتها عن المسجد النبوي وساعات تشغيلها.</span></a>
+          <a href="https://www.visitsaudi.com/ar/madinah/attractions/heritage-district" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">روح السعودية — الحي التراثي</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">الدخول من دون تذاكر وساعات مسائية تخالف الصياغة البلدية، والتعارض مذكور صراحة.</span></a>
+          <a href="https://qurancomplex.gov.sa/contact/" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">مجمع الملك فهد لطباعة المصحف الشريف</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">فترتا استقبال الزوار وحاجة الزيارة إلى تنسيق مسبق للأفواج.</span></a>
         </div>
         <p class="mt-6 text-xs leading-6 text-palm-900/55">تُجلب قراءات الطقس من خدمة Open-Meteo عند بناء الصفحة وتُخزَّن داخلها. نميز وصف المرافق المؤرخ عن حالتها التشغيلية الحالية. تفاصيل الرسم التوضيحي في تذييل الموقع.</p>
       </div>

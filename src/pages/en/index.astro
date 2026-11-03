@@ -1,0 +1,453 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FacilitiesSection from '../../components/FacilitiesSection.astro';
+import Weather from '../../components/Weather.astro';
+import HistorySection from '../../components/HistorySection.astro';
+import ExperienceSection from '../../components/ExperienceSection.astro';
+import TransportSection from '../../components/TransportSection.astro';
+import SeasonalStrategy from '../../components/SeasonalStrategy.astro';
+import Itineraries from '../../components/Itineraries.astro';
+import VisitorResponsibility from '../../components/VisitorResponsibility.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import { MAPS_SNAPSHOT, PARK } from '../../lib/parkGuide';
+import { CATEGORIES, englishGuides } from '../../data/guides';
+
+const siteUrl = Astro.site ? new URL('/en/', Astro.site).href : undefined;
+const arSiteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
+const heroUrl = Astro.site ? new URL('/images/park-concept.svg', Astro.site).href : undefined;
+const entityId = siteUrl ? `${siteUrl}#king-fahad-central-park` : undefined;
+
+const alternates = [
+  { hreflang: 'ar-SA', href: arSiteUrl },
+  { hreflang: 'en', href: siteUrl },
+  { hreflang: 'x-default', href: arSiteUrl }
+];
+
+const faqs = [
+  [
+    'Where is King Fahad Central Park?',
+    'In Al Hadiqah district, Madinah, postal code 42383, Plus Code CJC4+2F. Madinah Platform describes it as about five kilometres south of the Prophet\u2019s Mosque; that is a general location statement, not a walking distance. Open the map link to confirm the entrance and the route.'
+  ],
+  [
+    'What are the park\u2019s opening hours?',
+    'In the Google Maps snapshot dated ' + MAPS_SNAPSHOT.dateEn + ' the place showed as open 24 hours every day. Madinah Platform, published by the region\u2019s development authority, describes daily visits in the evening only, without a numeric hour. Check the on-site signs and the operator; the map card does not prove that every facility or event runs all day.'
+  ],
+  [
+    'Do opening hours change during Ramadan and Eid?',
+    'An event or a facility may keep its own separate hours. No confirmed seasonal hours are available here; check the organiser\u2019s current announcement before arranging your visit.'
+  ],
+  [
+    'Is there a walkway?',
+    'Madinah Municipality\u2019s post of 9 September 2024 mentions routes for walking, running and cycling. Choose the open section that suits your ability and follow the separation between cycling paths and pedestrian areas and the on-site signs.'
+  ],
+  [
+    'Where can I find photos of the park?',
+    'This page shows an original illustration, not a photograph or a map of the site. Check the place card on the maps for the most recent visitor photos; photos do not prove that every facility is running today.'
+  ],
+  [
+    'Is entry free?',
+    'The official pages we reviewed do not publish a current general entry fee. The absence of a price does not prove free entry; ask about entry, events and services separately.'
+  ],
+  [
+    'What is its rating on the maps?',
+    'On ' + MAPS_SNAPSHOT.dateEn + ' Google Maps showed a rating of ' + MAPS_SNAPSHOT.rating + ' out of 5 from ' + MAPS_SNAPSHOT.reviews.toLocaleString('en-US') + ' reviews. This is a third-party snapshot that can change, and it is not a rating collected by this guide.'
+  ],
+  [
+    'Is there parking?',
+    'In 2024 the municipality documented eight main car parks with a combined area of 20,000 square metres, plus additional lateral bays. Check which car park and entrance are open on the day of your visit; we cannot guarantee a free space.'
+  ],
+  [
+    'How long does a visit take?',
+    'Choose a duration that suits the open route and your group\u2019s needs, and add time to rest. This guide does not set a mandatory tour time or an internal distance that has not been measured.'
+  ],
+  [
+    'Is the park suitable for children?',
+    'Madinah Platform and the municipality mention play areas, seating and cultural and sports facilities. Check that the activity is open and suits your child\u2019s age, and supervise children near water and roads.'
+  ],
+  [
+    'What is the best time to visit?',
+    'Balance the confirmed opening hours, the actual weather and your ability to walk. Madinah Platform describes evening visits, but that is not a guarantee of comfortable weather or that every activity is running.'
+  ],
+  [
+    'Are there seating areas?',
+    'Official sources mention seating areas and green spaces. That does not guarantee a free seat or one continuous shaded route; check on arrival.'
+  ],
+  [
+    'Can I exercise in the park?',
+    'The sources mention routes for walking, running and cycling. Use the permitted route and follow the signs; we do not assume that equipment rental or a sports programme is available at a particular time.'
+  ],
+  [
+    'Is the park accessible for wheelchairs?',
+    'The maps place card shows an accessible entrance icon, but that does not prove that every route and facility is accessible. Check the entrance, the parking, the restroom and the ground surface against your own needs before visiting.'
+  ],
+  [
+    'Is there drinking water and an ablution area?',
+    'We have not verified the current locations or hours of drinking water, ablution areas and restrooms. Ask on arrival and carry your own water; do not rely on an unconfirmed service.'
+  ],
+  [
+    'Can I combine it with another visit?',
+    'You can plan a separate visit to other places in Madinah around their hours and your means of transport. General geographic closeness does not prove a continuous walkway or a specific transfer time.'
+  ],
+  [
+    'When do events take place?',
+    'The sources describe past cultural and leisure events, but that does not prove that an event is running today. Look for a dated announcement from the organiser with the venue, price and hours.'
+  ],
+  [
+    'How long is the park walkway?',
+    'An official municipality update published on 1 November 2026 describes a perimeter walkway 1,500 metres long and 12 metres wide, with 14 rest points, three accessible ramps and a cycling path of roughly 7,491 m\u00b2. These are project figures and do not confirm that every section is open today.'
+  ],
+  [
+    'Is there a dedicated cycling path?',
+    'Official sources mention a cycling path within the perimeter walkway works. We found no official text stating whether it is physically separated from the walking route, so follow the ground markings on arrival.'
+  ],
+  [
+    'Is the heritage district free to enter?',
+    'Visit Saudi states entry is free and lists evening hours that differ from the municipal wording (14:00 to 01:00 versus 17:00 to 03:00). The disagreement is real, so plan an evening visit and check the sign at the entrance.'
+  ],
+  [
+    'What are the Madinah Arts Center hours?',
+    'Official sources conflict: the centre\u2019s own site lists daily hours from 09:00 to 23:00, while its ticketing platform lists 17:00 to 23:00 with Sundays closed. Check the platform before travelling if your plan is a daytime visit.'
+  ],
+  [
+    'How do I get there from the airport or the Haramain train?',
+    'The Haramain station in Madinah is in Al Hadra district on King Abdulaziz Road, about 9 km from the Prophet\u2019s Mosque, with roughly 1,000 parking spaces. The official airport taxi table lists the zone covering the park area (about 18.5 km) at 55 SAR for a five-seat car and 70 SAR for a seven-seat car.'
+  ]
+];
+
+const attractionSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['TouristAttraction', 'Park'],
+  ...(entityId ? { '@id': entityId } : {}),
+  name: PARK.nameEn,
+  alternateName: PARK.alternateNames,
+  description:
+    'A large urban park in Madinah combining green space, walking, running and cycling routes, children\u2019s play areas, cultural and leisure facilities and an artificial lake.',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: PARK.districtEn,
+    addressLocality: PARK.cityEn,
+    addressRegion: PARK.regionEn,
+    postalCode: PARK.postalCode,
+    addressCountry: PARK.country
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: PARK.lat, longitude: PARK.lng },
+  containedInPlace: { '@type': 'AdministrativeArea', name: PARK.regionEn },
+  hasMap: PARK.mapsUrl,
+  sameAs: [
+    PARK.mapsUrl,
+    'https://visitmadinahsa.com/sa-en/destinations/King-Fahad-Park',
+    'https://www.amana-md.gov.sa/NewsCenter/Details/2396'
+  ]
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(([question, answer]) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer }
+  }))
+};
+
+const breadcrumbSchema = siteUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: PARK.nameEn, item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Madinah', item: 'https://visitmadinahsa.com/sa-en' },
+        { '@type': 'ListItem', position: 3, name: 'Al Madinah Region', item: 'https://www.amana-md.gov.sa' },
+        { '@type': 'ListItem', position: 4, name: 'Saudi Arabia', item: 'https://www.visitsaudi.com/en' }
+      ]
+    }
+  : undefined;
+
+const pageTitle = 'King Fahad Central Park, Madinah: hours, location and photos';
+const pageDesc =
+  'A visitor guide to King Fahad Central Park in Madinah: opening hours, the map location, the walkway, parking, family facilities, photos and practical tips before you go.';
+const pageDate = '2026-10-25';
+
+const graphSchema = siteUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': `${siteUrl}#organization`,
+          name: 'King Fahad Central Park Guide',
+          url: siteUrl,
+          logo: {
+            '@type': 'ImageObject',
+            '@id': `${siteUrl}#organization-logo`,
+            url: new URL('/favicon.svg', Astro.site).href,
+            width: 64,
+            height: 64
+          }
+        },
+        {
+          '@type': 'WebSite',
+          '@id': `${siteUrl}#website`,
+          url: siteUrl,
+          name: 'King Fahad Central Park Guide \u2013 Madinah',
+          inLanguage: 'en',
+          publisher: { '@id': `${siteUrl}#organization` },
+          about: { '@id': entityId }
+        },
+        {
+          '@type': 'WebPage',
+          '@id': `${siteUrl}#webpage`,
+          url: siteUrl,
+          name: pageTitle,
+          description: pageDesc,
+          inLanguage: 'en',
+          isPartOf: { '@id': `${siteUrl}#website` },
+          about: { '@id': entityId },
+          primaryImageOfPage: { '@type': 'ImageObject', '@id': `${siteUrl}#hero-image`, url: heroUrl },
+          dateModified: pageDate
+        }
+      ]
+    }
+  : undefined;
+
+const categories = CATEGORIES.map((category) => ({
+  ...category,
+  guides: englishGuides.filter((guide) => guide.category === category.id)
+})).filter((category) => category.guides.length > 0);
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  jsonLd={[attractionSchema, faqSchema, ...(breadcrumbSchema ? [breadcrumbSchema] : []), ...(graphSchema ? [graphSchema] : [])]}
+  lang="en"
+  dir="ltr"
+  siteName="King Fahad Central Park, Madinah"
+  ogLocale="en_US"
+  alternates={alternates}
+>
+  <section class="relative isolate overflow-hidden bg-night-950 text-white">
+    <div class="park-hero-background absolute inset-0 z-0">
+      <div class="photo-frame h-full w-full">
+        <div class="photo-fallback"><span class="max-w-md text-sm leading-7 opacity-85">An original illustration, not a photograph of the site.</span></div>
+        <img src="/images/park-concept.svg" alt="An original conceptual illustration of an urban park; not a photograph of the site" width="1600" height="900" fetchpriority="high" onerror="this.style.display='none'" />
+      </div>
+      <div class="absolute inset-0 z-10 bg-gradient-to-l from-night-950/96 via-night-950/70 to-palm-900/30"></div>
+      <div class="absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-night-950 to-transparent"></div>
+    </div>
+    <div class="park-hero-content relative z-10 mx-auto grid min-h-[76vh] max-w-7xl items-end gap-8 px-5 pb-16 pt-28 lg:grid-cols-[1.1fr_.55fr] lg:px-8 lg:pb-24">
+      <div>
+        <p class="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-black backdrop-blur">Al Hadiqah · Madinah · Saudi Arabia</p>
+        <h1 class="max-w-4xl text-5xl font-black leading-[1.2] tracking-tight sm:text-7xl">King Fahad Central Park <span class="mt-3 block text-3xl font-black leading-snug text-gold-400 sm:text-4xl">in Madinah</span></h1>
+        <p class="mt-6 max-w-3xl text-xl leading-10 text-sand-100/92">A large urban oasis of trees, shade, movement routes, family facilities and cultural buildings, about five kilometres south of the Prophet’s Mosque.</p>
+        <div class="mt-7 flex flex-wrap gap-3 text-sm font-black">
+          <span class="rounded-full bg-gold-400 px-4 py-2 text-night-950">Google Maps: <bdi dir="ltr">{MAPS_SNAPSHOT.rating} / 5 · {MAPS_SNAPSHOT.reviews.toLocaleString('en-US')}</bdi> · {MAPS_SNAPSHOT.dateEn}</span>
+          <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">Public park</span>
+          <span class="rounded-full border border-white/20 bg-white/10 px-4 py-2">{PARK.plusCode}</span>
+          <a class="rounded-full border border-gold-400/50 bg-white/10 px-4 py-2 text-gold-400 no-underline hover:bg-gold-400/15" href="/" hreflang="ar" lang="ar">الدليل بالعربية</a>
+        </div>
+      </div>
+      <aside class="rounded-[2rem] border border-white/15 bg-white/10 p-6 backdrop-blur-xl">
+        <p class="text-sm font-black text-gold-400">Site data</p>
+        <dl class="mt-5 space-y-5 text-sm leading-7">
+          <div><dt class="font-black text-white">Address</dt><dd class="text-sand-100/80">{PARK.districtEn}, {PARK.cityEn} {PARK.postalCode}, Saudi Arabia</dd></div>
+          <div><dt class="font-black text-white">Coordinates</dt><dd class="text-sand-100/80" dir="ltr">{PARK.lat}, {PARK.lng}</dd></div>
+          <div><dt class="font-black text-white">Visiting</dt><dd class="text-sand-100/80">Map snapshot {MAPS_SNAPSHOT.dateEn}: 24 hours; Madinah Platform describes evenings. Confirm current access.</dd></div>
+        </dl>
+        <a href={PARK.mapsUrl} target="_blank" rel="noopener noreferrer" class="mt-6 block rounded-full bg-white px-5 py-3 text-center font-black text-palm-900 no-underline">Directions on Google Maps</a>
+      </aside>
+    </div>
+  </section>
+
+  <p class="bg-sand-50 px-5 py-3 text-center text-sm leading-7">Illustration: an original work for this guide, October 2026; it is not a photograph of King Fahad Central Park nor a map of its entrances.</p>
+
+  <section class="border-b border-palm-900/10 bg-palm-900 py-10 text-white lg:py-12">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <p class="text-sm font-black text-gold-400">Quick facts</p>
+      <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">📍</span><div><p class="font-black">Location</p><p class="mt-1 text-sm leading-7 text-sand-100/80">{PARK.districtEn}, {PARK.cityEn}</p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🕓</span><div><p class="font-black">Hours</p><p class="mt-1 text-sm leading-7 text-sand-100/80"><a class="text-gold-400 no-underline hover:underline" href="#hours">Read how the sources disagree and confirm current access</a></p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🎟️</span><div><p class="font-black">Entry fees</p><p class="mt-1 text-sm leading-7 text-sand-100/80">Check the current fees for events and facilities</p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🚗</span><div><p class="font-black">Parking</p><p class="mt-1 text-sm leading-7 text-sand-100/80">Described in the municipality’s 2024 post; check what is available</p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🚶</span><div><p class="font-black">Walkway</p><p class="mt-1 text-sm leading-7 text-sand-100/80"><a class="text-gold-400 no-underline hover:underline" href="#facilities">Routes for walking and running</a></p></div></li>
+        <li class="flex items-start gap-3 rounded-2xl bg-white/5 p-4"><span class="text-2xl" aria-hidden="true">🗺️</span><div><p class="font-black">Directions</p><p class="mt-1 text-sm leading-7 text-sand-100/80"><a class="text-gold-400 no-underline hover:underline" href={PARK.mapsUrl} target="_blank" rel="noopener noreferrer">Open on Google Maps</a></p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="overview" class="leaf-divider border-b border-palm-900/10 bg-sand-50 py-16 lg:py-24">
+    <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[1.05fr_.7fr] lg:px-8">
+      <div>
+        <nav aria-label="Geographic breadcrumb" class="flex flex-wrap items-center gap-2 text-xs font-black text-palm-900/55">
+          <span>King Fahad Central Park</span>
+          <span aria-hidden="true">›</span>
+          <span>Madinah</span>
+          <span aria-hidden="true">›</span>
+          <span>Al Madinah Region</span>
+          <span aria-hidden="true">›</span>
+          <span>Saudi Arabia</span>
+        </nav>
+        <p class="text-sm font-black text-gold-600 mt-4">A green landmark in Madinah</p>
+        <h2 class="mt-3 text-4xl font-black leading-tight text-palm-900 sm:text-5xl">A large park with a social and cultural character</h2>
+        <div class="mt-7 space-y-5 text-lg leading-9 text-palm-900/75">
+          <p>King Fahad Central Park is the largest central park in Madinah, known in English as “Madinah Central Park”, and it is the destination represented by the domain madinahcentralpark.com. It lies in the heart of Madinah and is a major hub for visitors to the region.</p>
+          <p>Madinah Municipality describes King Fahad Central Park as one of the city’s prominent social and cultural destinations, combining wide green spaces with buildings of a heritage character and facilities for movement and rest.</p>
+          <p>Its elements mentioned in local sources include routes for walking, running and cycling, children’s play areas, seating, an artificial lake, cultural spaces, and equestrian and food facilities, in addition to Souq Al Ainiah, the heritage district and the Madinah Arts Center.</p>
+        </div>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a class="rounded-full bg-palm-900 px-5 py-3 text-sm font-black text-white no-underline" href="#plan">Plan your visit</a>
+          <a class="rounded-full border border-palm-900/15 bg-white px-5 py-3 text-sm font-black text-palm-900 no-underline" href="#sources">Official sources</a>
+        </div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <article class="rounded-[2rem] bg-palm-900 p-6 text-white"><div class="text-3xl">🌿</div><h3 class="mt-4 text-xl font-black">Green spaces</h3><p class="mt-2 text-sm leading-7 text-white/75">Trees, shade and open spaces suited to walking and resting.</p></article>
+        <article class="rounded-[2rem] border border-palm-900/10 bg-white p-6"><div class="text-3xl">🚶</div><h3 class="mt-4 text-xl font-black">Movement routes</h3><p class="mt-2 text-sm leading-7 text-palm-900/65">Routes for walking, running and cycling within the park environment.</p></article>
+        <article class="rounded-[2rem] border border-palm-900/10 bg-white p-6"><div class="text-3xl">👨‍👩‍👧‍👦</div><h3 class="mt-4 text-xl font-black">Family spaces</h3><p class="mt-2 text-sm leading-7 text-palm-900/65">Children’s play areas, seating and facilities suited to family visits.</p></article>
+        <article class="rounded-[2rem] bg-gold-400 p-6 text-night-950"><div class="text-3xl">🎨</div><h3 class="mt-4 text-xl font-black">Culture and heritage</h3><p class="mt-2 text-sm leading-7 text-night-950/75">A heritage district, Souq Al Ainiah and an arts centre within the park and its development surroundings.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan" class="oasis-grid bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-black text-gold-600">Practical information</p>
+        <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">Plan your visit without assumptions</h2>
+        <p class="mt-5 text-lg leading-9 text-palm-900/70">Changeable information is written in cautious wording, separating what local bodies publish from practical advice that may vary with the season and with events.</p>
+      </div>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🎟️</span><h3 class="mt-4 text-xl font-black">Tickets and fees</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">The tourism sources we used do not state a fixed general fee for entry to the open spaces. Some events, facilities or services may charge separately.</p></article>
+        <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🌙</span><h3 class="mt-4 text-xl font-black">Best time and visit duration</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">Choose a duration and a route that suit your ability, the weather and the confirmed opening hours, with time to rest and to return.</p></article>
+        <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🅿️</span><h3 class="mt-4 text-xl font-black">Parking</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">The municipality mentions eight main car parks with a combined area of about 20,000 m², plus lateral bays. During large events, arriving early is better.</p></article>
+        <article class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><span class="text-3xl">🕓</span><h3 class="mt-4 text-xl font-black">Visiting hours</h3><p class="mt-3 text-sm leading-7 text-palm-900/68">Google Maps on {MAPS_SNAPSHOT.dateEn}: 24 hours; Madinah Platform: the evening period. The sources mean different things, so confirm how the facility actually operates.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="hours" class="bg-sand-50 py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <p class="text-sm font-black text-gold-600">Hours and where they come from</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">King Fahad Central Park hours: the sources disagree</h2>
+      <p class="mt-5 max-w-3xl text-lg leading-9">On {MAPS_SNAPSHOT.dateEn} the Google Maps place card showed the place open <bdi dir="ltr">24</bdi> hours every day of the week. Madinah Platform, published by the region’s development authority, describes the gates opening daily in the evening, without stating an hour.</p>
+      <div class="mt-8 grid gap-5 md:grid-cols-2">
+        <article class="rounded-3xl bg-white p-6"><h3 class="font-black">The map snapshot</h3><p class="mt-3 leading-8">This is a third-party record at the date of review, not a commitment by the park operator. It does not prove that restaurants, activities and facilities run all day.</p><a href={PARK.mapsUrl} target="_blank" rel="noopener noreferrer" class="font-bold underline">Open the current place card</a></article>
+        <article class="rounded-3xl bg-white p-6"><h3 class="font-black">The general official description</h3><p class="mt-3 leading-8">The Madinah Platform page is undated in its body and describes an evening visit. Confirm with on-site signs or the operator before arranging an early or late arrival, and check event times separately.</p><a href="https://visitmadinahsa.com/sa-en/destinations/King-Fahad-Park" target="_blank" rel="noopener noreferrer" class="font-bold underline">Madinah Platform page</a></article>
+      </div>
+      <p class="mt-6 text-sm leading-8">There is no confirmed current general entry fee here. The absence of a price on the official page does not prove that entry is free; ask about entry, the event and services separately.</p>
+    </div>
+  </section>
+
+  <section id="walkway" class="border-b border-palm-900/10 bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:items-end">
+        <div>
+          <p class="text-sm font-black text-gold-600">Latest official update</p>
+          <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">The park walkway in numbers</h2>
+        </div>
+        <p class="text-lg leading-9 text-palm-900/70">
+          On 1 November 2026 Madinah Municipality published a description of a perimeter walkway inside the park. The figures below are published as a project and describe dimensions, not today’s operating status, so follow the ground markings on arrival.
+        </p>
+      </div>
+      <dl class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">Walkway length</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterWalkwayLengthM.toLocaleString('en-US')} m</bdi></dd><p class="mt-2 text-sm leading-7 text-palm-900/65">And <bdi dir="ltr">{PARK.perimeterWalkwayWidthM} m</bdi> wide according to the official project description.</p></div>
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">Rest points</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterWalkwayRestPoints}</bdi> points</dd><p class="mt-2 text-sm leading-7 text-palm-900/65">With <bdi dir="ltr">{PARK.perimeterWalkwayAccessibleRamps}</bdi> ramps adapted for people with disabilities.</p></div>
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">Cycling path</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterBikePathAreaSqm.toLocaleString('en-US')} m²</bdi></dd><p class="mt-2 text-sm leading-7 text-palm-900/65">We found no official text explaining whether the path is physically separated from the walking route.</p></div>
+        <div class="rounded-[2rem] border border-palm-900/10 bg-sand-50 p-6"><dt class="text-sm font-black text-gold-600">Lighting</dt><dd class="mt-2 text-3xl font-black text-palm-900"><bdi dir="ltr">{PARK.perimeterWalkwayVisibleLights + PARK.perimeterWalkwayHiddenLights}</bdi> units</dd><p class="mt-2 text-sm leading-7 text-palm-900/65">Of which <bdi dir="ltr">{PARK.perimeterWalkwayVisibleLights}</bdi> are visible and <bdi dir="ltr">{PARK.perimeterWalkwayHiddenLights}</bdi> hidden according to the project description.</p></div>
+      </dl>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="rounded-full bg-palm-900 px-5 py-3 text-sm font-black text-white no-underline hover:bg-palm-700" href="/en/guides/walkway/">The full walkway guide</a>
+        <a class="rounded-full border border-palm-900/20 bg-white px-5 py-3 text-sm font-black text-palm-900 no-underline hover:border-gold-400" href="/en/guides/parking/">Project parking: <bdi dir="ltr">{PARK.perimeterWalkwayParkingSpaces}</bdi> spaces</a>
+      </div>
+    </div>
+  </section>
+
+  <FacilitiesSection lang="en" />
+
+  <Weather lang="en" />
+
+  <SeasonalStrategy lang="en" />
+
+  <TransportSection lang="en" />
+
+  <section id="food-culture" class="bg-sand-50 py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <h2 class="text-3xl font-black text-palm-900">Food and culture within your visit plan</h2>
+      <div class="mt-7 grid gap-5 md:grid-cols-2">
+        <article class="rounded-3xl bg-white p-6"><h3 class="font-black">Food and services</h3><p class="mt-3 leading-8">Madinah Platform mentions restaurants among the park’s facilities. Check which outlet is open, its hours and its prices on the day of your visit; this guide does not provide a verified list of commercial branches, cash machines or nearby car charging.</p></article>
+        <article class="rounded-3xl bg-white p-6"><h3 class="font-black">The heritage district, Souq Al Ainiah and the Arts Center</h3><p class="mt-3 leading-8">The municipality and Madinah Platform mention these elements in the park description. Their presence in a description does not prove that an exhibition is open or that an event is running today; check the specific place and its schedule before adding it to your plan.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <HistorySection lang="en" />
+
+  <ExperienceSection lang="en" />
+
+  <Itineraries lang="en" />
+
+  <VisitorResponsibility lang="en" />
+
+  <section class="bg-white py-16 lg:py-24"><figure class="mx-auto max-w-4xl px-5"><h2 class="text-3xl font-black">A conceptual illustration of an urban park</h2><img class="mt-6 w-full rounded-3xl" src="/images/park-concept.svg" alt="An original conceptual illustration of an urban park; not a photograph of the site" width="1200" height="800" loading="lazy"/><figcaption class="mt-4 text-sm leading-8">An original work for this guide, October 2026. It does not represent the park or its actual facilities and entrances. Current visitor photos are available through the external place card.</figcaption></figure></section>
+
+  <section id="guides" class="leaf-divider border-t border-palm-900/10 bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:items-end">
+        <div>
+          <p class="text-sm font-black text-gold-600">Detailed guides</p>
+          <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">Visitor guides to the park</h2>
+        </div>
+        <p class="text-lg leading-9 text-palm-900/70">{englishGuides.length} independent guides covering hours, location, photos and the walkway, family facilities, culture and the heritage market, food, half-day plans and arrival from the airport or train. Each one separates official sources from third-party snapshots.</p>
+      </div>
+      <div class="mt-10 space-y-12">
+        {categories.map((category) => (
+          <div>
+            <div class="flex flex-wrap items-baseline justify-between gap-3">
+              <h3 class="text-2xl font-black text-palm-900">{category.labelEn}</h3>
+              <p class="text-sm leading-7 text-palm-900/60">{category.noteEn}</p>
+            </div>
+            <div class="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {category.guides.map((guide) => <GuideCard guide={guide} lang="en" />)}
+            </div>
+          </div>
+        ))}
+      </div>
+      <a class="mt-10 inline-block rounded-full bg-palm-900 px-5 py-3 font-black text-white no-underline hover:bg-palm-700" href="/en/guides/">Browse every guide on one page</a>
+    </div>
+  </section>
+
+  <section id="faq" class="bg-palm-50 py-16 lg:py-24">
+    <div class="mx-auto max-w-5xl px-5 lg:px-8">
+      <div class="text-center">
+        <p class="text-sm font-black text-gold-600">Practical answers for your visit</p>
+        <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">Frequently asked questions</h2>
+      </div>
+      <div class="mt-10 space-y-4">
+        {faqs.map(([question, answer]) => (
+          <details class="group rounded-3xl border border-palm-900/10 bg-white p-6 open:shadow-sm">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-5 font-black text-palm-900"><span>{question}</span><span class="text-gold-600 transition group-open:rotate-45">＋</span></summary>
+            <p class="mt-4 border-t border-palm-900/10 pt-4 text-sm leading-8 text-palm-900/68">{answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="sources" class="bg-sand-50 py-16 lg:py-20">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-[.7fr_1.3fr]">
+        <div><p class="text-sm font-black text-gold-600">Linking to official bodies</p><h2 class="mt-3 text-3xl font-black text-palm-900">Reference sources</h2></div>
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <a href="https://www.amana-md.gov.sa/NewsCenter/Details/2396" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">Madinah Municipality</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">Park information, facilities, parking and development.</span></a>
+          <a href="https://www.amana-md.gov.sa/NewsCenter/Details/1064" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">Municipality — municipal projects</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">An announcement of a project package that included developing King Fahad Central Park (1444 AH).</span></a>
+          <a href="https://visitmadinahsa.com/sa-en/destinations/King-Fahad-Park" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">Madinah Platform</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">The park destination page within the content of the region’s development authority.</span></a>
+          <a href="https://www.visitsaudi.com/en" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">Visit Saudi</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">The national tourism portal of the Kingdom of Saudi Arabia.</span></a>
+          <a href="https://www.amana-md.gov.sa/NewsCenter/Details/2635" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">Municipality — park walkway (1 Nov 2026)</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">The latest official update on a perimeter walkway 1,500 m long and 12 m wide, compared with the Qaswa walkway.</span></a>
+          <a href="https://www.hhr.sa/ar/-/madinah" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">Haramain High Speed Rail — Madinah station</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">Station district, distance to the Prophet’s Mosque and daily operating hours.</span></a>
+          <a href="https://www.visitsaudi.com/en/madinah/attractions/heritage-district" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">Visit Saudi — the heritage district</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">Free entry and evening hours that contradict the municipal wording; the disagreement is stated explicitly.</span></a>
+          <a href="https://qurancomplex.gov.sa/contact/" target="_blank" rel="noopener noreferrer" class="rounded-3xl border border-palm-900/10 bg-white p-5 no-underline"><strong class="block text-palm-900">King Fahad Quran Printing Complex</strong><span class="mt-2 block text-sm leading-7 text-palm-900/60">Visitor reception periods and the need to arrange group visits in advance.</span></a>
+        </div>
+        <p class="mt-6 text-xs leading-6 text-palm-900/55">Weather readings are fetched from Open-Meteo at build time and stored in the page. We separate dated facility descriptions from current operating status. Illustration details are in the site footer.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

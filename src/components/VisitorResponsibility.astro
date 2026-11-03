@@ -1,6 +1,11 @@
 ---
 // قسم التوعية العلمية والمسؤولية: بيئة الحديقة، الحياة الفطرية، السلامة، واحترام الثقافة المحلية.
-const topics = [
+interface Props {
+  lang?: 'ar' | 'en';
+}
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
+const topicsAr = [
   {
     icon: '♻️',
     title: 'حماية البيئة والصفر نفايات',
@@ -32,13 +37,47 @@ const topics = [
     body: 'حديقة الملك فهد المركزية منشأة عصرية طوّرتها برامج الأمانة ضمن الحدائق المركزية، وهي جزء من امتداد عمراني جنوب المدينة يضم سوق العينية والحي التراثي ومركز الفنون. فهم هذا السياق يعمّق متعة الزيارة.'
   }
 ];
+
+const topicsEn = [
+  {
+    icon: '♻️',
+    title: 'Protecting the environment and zero waste',
+    body: 'Keep your waste with you until you hand it over to the designated bins, and do not cut branches or pick flowers. Protect the plants and the paths and follow the on-site instructions.'
+  },
+  {
+    icon: '🐦',
+    title: 'Respecting wildlife',
+    body: 'Observe nature from the paths without disturbing or feeding the animals. This guide does not guarantee that any particular species will be seen.'
+  },
+  {
+    icon: '🌡️',
+    title: 'Safety and heat',
+    body: 'In summer the heat is intense during the day; drink water regularly, avoid exposed paths at peak times, and take regular rests in the shade. Near the artificial lake, watch the children and stay away from the water’s edge.'
+  },
+  {
+    icon: '📷',
+    title: 'Privacy and culture',
+    body: 'The park is a family and social destination; respect families’ privacy when taking photographs and ask permission before photographing people, and mind the prayer times when moving through the neighbouring districts. This care makes the visit comfortable for everyone.'
+  },
+  {
+    icon: '🚸',
+    title: 'Using the facilities responsibly',
+    body: 'Follow the directional signs and the designated cycle lanes, and do not ride a bicycle in pedestrian areas. Watch the children near roads and water, and leave the facilities as you would like to find them.'
+  },
+  {
+    icon: '💡',
+    title: 'Knowing the place and how it developed',
+    body: 'King Fahad Central Park is a modern facility developed by the municipality’s programmes among the central parks, and it is part of an urban extension south of the city that includes Al-Ainiah Market, the heritage district and the arts centre. Understanding this context deepens the enjoyment of the visit.'
+  }
+];
+const topics = isEn ? topicsEn : topicsAr;
 ---
-<section id="المسؤولية" class="bg-palm-50 py-16 lg:py-24">
+<section id={isEn ? 'responsibility' : 'المسؤولية'} class="bg-palm-50 py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="max-w-3xl">
-      <p class="text-sm font-black text-gold-600">توعية علمية ومسؤولية الزائر</p>
-      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">كيف تكون زيارة مسؤولة</h2>
-      <p class="mt-5 text-lg leading-9 text-palm-900/70">نظرة علمية مبسّطة على بيئة الحديقة وحياتها الفطرية، مع قواعد عملية تحفظ راحة الجميع وسلامة المكان للأجيال القادمة.</p>
+      <p class="text-sm font-black text-gold-600">{isEn ? 'Scientific awareness and visitor responsibility' : 'توعية علمية ومسؤولية الزائر'}</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">{isEn ? 'How to make your visit responsible' : 'كيف تكون زيارة مسؤولة'}</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">{isEn ? 'A simplified scientific look at the park’s environment and wildlife, with practical rules that preserve everyone’s comfort and keep the place safe for future generations.' : 'نظرة علمية مبسّطة على بيئة الحديقة وحياتها الفطرية، مع قواعد عملية تحفظ راحة الجميع وسلامة المكان للأجيال القادمة.'}</p>
     </div>
 
     <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">

@@ -1,6 +1,12 @@
 ---
 // خدمات ومرافق بوصفها أنواعاً فقط (من دون أسماء منشآت)، انسجاماً مع الطابع الإرشادي غير الربحي للمشروع.
-const facilities = [
+interface Props {
+  lang?: 'ar' | 'en';
+}
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
+
+const facilitiesAr = [
   {
     "icon": "🅿️",
     "title": "مواقف السيارات",
@@ -38,15 +44,56 @@ const facilities = [
     "body": "رمز المدخل المهيأ في الخرائط ليس تقييماً لجميع المسارات. تحقق من الموقف والمدخل والسطح ودورة المياه المناسبة قبل الزيارة."
   }
 ];
+
+const facilitiesEn = [
+  {
+    "icon": "🅿️",
+    "title": "Car parks",
+    "note": "Archived description",
+    "body": "On 9 September 2024 the municipality documented eight main car parks and parallel parking. Check which entrance is open and which spot suits you; we do not guarantee a space will be available."
+  },
+  {
+    "icon": "🚻",
+    "title": "Restrooms and water",
+    "note": "Verify before relying on it",
+    "body": "Ask about the location of restrooms and drinking water, their hours and how well they suit your needs. This guide does not prove they are available at every entrance."
+  },
+  {
+    "icon": "🧒",
+    "title": "Children's play areas",
+    "note": "Official sources",
+    "body": "The municipality and the city platform mention children's areas. Check that the equipment is open and the age it suits, and supervise your child; describing the area does not guarantee that every piece of equipment works."
+  },
+  {
+    "icon": "🚶",
+    "title": "Walkway and sports",
+    "note": "Official sources",
+    "body": "The sources describe paths for walking, running and cycling. Follow the permitted path and the guidance, and choose a distance that suits your ability and the weather."
+  },
+  {
+    "icon": "🍽️",
+    "title": "Food and drink",
+    "note": "Check operation",
+    "body": "The city platform mentions restaurants among the facilities. Check the name of the establishment that is open, its hours and its price; there is no documented commercial list of specific branches here."
+  },
+  {
+    "icon": "♿",
+    "title": "Accessibility",
+    "note": "Individual need",
+    "body": "The accessible-entrance icon on maps is not an assessment of all routes. Before your visit, check the parking, the entrance, the surface and a suitable restroom."
+  }
+];
+
+const facilities = isEn ? facilitiesEn : facilitiesAr;
 ---
-<section id="المرافق" class="bg-sand-50 py-16 lg:py-24">
+<section id={isEn ? 'facilities' : 'المرافق'} class="bg-sand-50 py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="grid gap-8 lg:grid-cols-[.65fr_1.35fr] lg:items-end">
       <div>
-        <p class="text-sm font-black text-gold-600">الخدمات والمرافق</p>
-        <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">كل ما يهمك قبل الزيارة</h2>
+        <p class="text-sm font-black text-gold-600">{isEn ? 'Facilities and services' : 'الخدمات والمرافق'}</p>
+        <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">{isEn ? 'Everything you need before you visit' : 'كل ما يهمك قبل الزيارة'}</h2>
       </div>
-      <p class="text-lg leading-9 text-palm-900/70">نميز بين المرافق التي وصفتها المصادر الرسمية وبين خدمات ينبغي التحقق منها يوم الزيارة. أوصاف التطوير المؤرخة لا تضمن تشغيل كل مرفق الآن.</p>
+      <p class="text-lg leading-9 text-palm-900/70">{isEn ? 'We distinguish between the facilities described by official sources and services that should be verified on the day of your visit. Dated development descriptions do not guarantee that every facility is operating now.' : 'نميز بين المرافق التي وصفتها المصادر الرسمية وبين خدمات ينبغي التحقق منها يوم الزيارة. أوصاف التطوير المؤرخة لا تضمن تشغيل كل مرفق الآن.'}</p>
     </div>
 
     <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -63,7 +110,7 @@ const facilities = [
     </div>
 
     <div class="mt-8 rounded-3xl border border-gold-400/40 bg-gold-400/10 p-5 text-sm leading-8 text-palm-900/75">
-      <strong class="font-black">ملاحظة الحياد:</strong> الأوصاف الرسمية المشار إليها تعود إلى منشور الأمانة في 9 سبتمبر 2024 وصفحة منصة المدينة. تحقق من الخدمات الحالية والرسوم عند الجهة المشغلة.
+      <strong class="font-black">{isEn ? 'Neutrality note:' : 'ملاحظة الحياد:'}</strong> {isEn ? 'The official descriptions referred to date back to the municipality’s post of 9 September 2024 and the city platform page. Check current services and fees with the operating authority.' : 'الأوصاف الرسمية المشار إليها تعود إلى منشور الأمانة في 9 سبتمبر 2024 وصفحة منصة المدينة. تحقق من الخدمات الحالية والرسوم عند الجهة المشغلة.'}
     </div>
   </div>
 </section>

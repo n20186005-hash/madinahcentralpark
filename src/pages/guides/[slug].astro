@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuidePage from '../../components/GuidePage.astro';
+import { PARK } from '../../lib/parkGuide';
+import { allGuides, guidePathEn } from '../../data/guides';
+
+export function getStaticPaths() {
+  return allGuides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const hubUrl = Astro.site ? new URL('/guides/', Astro.site).href : undefined;
+const homeUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  ...(pageUrl ? { '@id': `${pageUrl}#article` } : {}),
+  headline: guide.h1,
+  description: guide.description,
+  inLanguage: 'ar-SA',
+  dateModified: guide.updated,
+  ...(pageUrl ? { mainEntityOfPage: pageUrl } : {}),
+  about: { '@type': ['TouristAttraction', 'Park'], name: PARK.nameAr, alternateName: PARK.alternateNames },
+  ...(homeUrl
+    ? {
+        author: { '@type': 'Organization', name: 'دليل حديقة الملك فهد المركزية', url: homeUrl },
+        publisher: { '@type': 'Organization', name: 'دليل حديقة الملك فهد المركزية', url: homeUrl }
+      }
+    : {})
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: guide.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: { '@type': 'Answer', text: faq.a }
+  }))
+};
+
+const breadcrumbSchema = pageUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'حديقة الملك فهد المركزية', ...(homeUrl ? { item: homeUrl } : {}) },
+        { '@type': 'ListItem', position: 2, name: 'أدلة الزيارة', ...(hubUrl ? { item: hubUrl } : {}) },
+        { '@type': 'ListItem', position: 3, name: guide.h1, item: pageUrl }
+      ]
+    }
+  : undefined;
+
+const schemas: unknown[] = [articleSchema, faqSchema];
+if (breadcrumbSchema) schemas.push(breadcrumbSchema);
+
+const enHref = guide.en && Astro.site ? new URL(guidePathEn(guide.slug), Astro.site).href : undefined;
+const alternates = [
+  { hreflang: 'ar-SA', href: pageUrl },
+  ...(enHref ? [{ hreflang: 'en', href: enHref }] : []),
+  { hreflang: 'x-default', href: pageUrl }
+];
+---
+<BaseLayout
+  title={guide.title}
+  description={guide.description}
+  jsonLd={schemas}
+  alternates={alternates}
+>
+  <GuidePage guide={guide} lang="ar" alternateHref={enHref} />
+</BaseLayout>

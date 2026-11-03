@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import GuidePage from '../../../components/GuidePage.astro';
+import { PARK } from '../../../lib/parkGuide';
+import { englishGuides, guidePath, localizeGuide } from '../../../data/guides';
+
+export function getStaticPaths() {
+  return englishGuides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+const localized = localizeGuide(guide, 'en');
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const arUrl = Astro.site ? new URL(guidePath(guide.slug), Astro.site).href : undefined;
+const hubUrl = Astro.site ? new URL('/en/guides/', Astro.site).href : undefined;
+const homeUrl = Astro.site ? new URL('/en/', Astro.site).href : undefined;
+
+const alternates = [
+  { hreflang: 'ar-SA', href: arUrl },
+  { hreflang: 'en', href: pageUrl },
+  { hreflang: 'x-default', href: arUrl }
+];
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  ...(pageUrl ? { '@id': `${pageUrl}#article` } : {}),
+  headline: localized.h1,
+  description: localized.description,
+  inLanguage: 'en',
+  dateModified: guide.updated,
+  ...(pageUrl ? { mainEntityOfPage: pageUrl } : {}),
+  about: { '@type': ['TouristAttraction', 'Park'], name: PARK.nameEn, alternateName: PARK.alternateNames },
+  ...(homeUrl
+    ? {
+        author: { '@type': 'Organization', name: 'King Fahad Central Park Guide', url: homeUrl },
+        publisher: { '@type': 'Organization', name: 'King Fahad Central Park Guide', url: homeUrl }
+      }
+    : {})
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: localized.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: { '@type': 'Answer', text: faq.a }
+  }))
+};
+
+const breadcrumbSchema = pageUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: PARK.nameEn, ...(homeUrl ? { item: homeUrl } : {}) },
+        { '@type': 'ListItem', position: 2, name: 'Visitor guides', ...(hubUrl ? { item: hubUrl } : {}) },
+        { '@type': 'ListItem', position: 3, name: localized.h1, item: pageUrl }
+      ]
+    }
+  : undefined;
+
+const schemas: unknown[] = [articleSchema, faqSchema];
+if (breadcrumbSchema) schemas.push(breadcrumbSchema);
+---
+<BaseLayout
+  title={localized.title}
+  description={localized.description}
+  jsonLd={schemas}
+  lang="en"
+  dir="ltr"
+  siteName="King Fahad Central Park, Madinah"
+  ogLocale="en_US"
+  alternates={alternates}
+>
+  <GuidePage guide={localized} lang="en" alternateHref={arUrl} />
+</BaseLayout>

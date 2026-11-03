@@ -14,8 +14,9 @@ const report = {
   'weather source noted': html.includes('Open-Meteo'),
   'concept labelled': html.includes('ليس صورة للموقع') && html.includes('/images/park-concept.svg'),
   'no retired photography': !/king-fahd-central-park-[a-z]+\.jpg/.test(html),
-  // الحياد التجاري: لا أسماء محلات
-  'no merchant names': ['فيردان', 'شيف إياد', 'قصر الريحان', 'زمان ستي'].every((n) => !html.includes(n)),
+  // الحياد التجاري: أُلغي حظر أسماء المنشآت التجارية، ويُشترط عرضها بمصدر قابل للمراجعة.
+  // أدلة الزيارة: يُتحقق من ربط الصفحة الرئيسية بمركز الأدلة.
+  'guides hub linked': count('href="/guides/"') > 0,
   // الأسئلة الشائعة
   'faq count': count('<summary'),
   // التنقل

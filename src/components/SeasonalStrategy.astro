@@ -1,7 +1,13 @@
 ---
 // رتّب الزيارة حسب الظروف الفعلية + تحليل المناخ والمياه والحياة الفطرية.
 // سيناريوهات تخطيط مشروطة، وليست متوسطات مناخية.
-const seasons = [
+interface Props {
+  lang?: 'ar' | 'en';
+}
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
+
+const seasonsAr = [
   {
     "name": "الحر",
     "months": "عند ارتفاع الحرارة",
@@ -36,7 +42,7 @@ const seasons = [
   }
 ];
 
-const environment = [
+const environmentAr = [
   {
     "icon": "🌡️",
     "title": "الطقس الفعلي",
@@ -53,25 +59,81 @@ const environment = [
     "body": "راقب النباتات من المسارات من دون قطف أو إتلاف، ولا تطعم الحيوانات. لا نضمن مشاهدة نوع معين من الطيور أو الحياة الفطرية."
   }
 ];
+
+const seasonsEn = [
+  {
+    "name": "Hot",
+    "months": "When the temperature rises",
+    "temp": "According to the bulletin",
+    "rain": "Check the alerts",
+    "advice": "Shorten sun exposure and plan for rest and water within confirmed entry hours.",
+    "goodFor": "Shorter plan"
+  },
+  {
+    "name": "Mild",
+    "months": "According to the day of the visit",
+    "temp": "According to the bulletin",
+    "rain": "Not assumed",
+    "advice": "Choose a route that suits your ability; mild heat does not guarantee that every activity is open.",
+    "goodFor": "Walking according to ability"
+  },
+  {
+    "name": "Rain",
+    "months": "When it is expected",
+    "temp": "According to the bulletin",
+    "rain": "Possibility, not intensity",
+    "advice": "Check the warnings and avoid low-lying routes if water accumulates.",
+    "goodFor": "Adjusting the plan"
+  },
+  {
+    "name": "Dust and wind",
+    "months": "When there is an alert",
+    "temp": "According to the bulletin",
+    "rain": "Not linked to rain",
+    "advice": "Follow the official alert and reconsider exposed activities.",
+    "goodFor": "Alternative plan"
+  }
+];
+
+const environmentEn = [
+  {
+    "icon": "🌡️",
+    "title": "Actual weather",
+    "body": "These are planning scenarios and not monthly climate averages or guaranteed forecasts. Check the current bulletin before going out."
+  },
+  {
+    "icon": "💧",
+    "title": "Water and green spaces",
+    "body": "Official sources describe the water surfaces and the artificial lake. View the water from the permitted path and follow the barriers, and carry drinking water instead of relying on an unconfirmed refill point."
+  },
+  {
+    "icon": "🌿",
+    "title": "Respecting nature",
+    "body": "Observe the plants from the paths without picking or damaging them, and do not feed the animals. We do not guarantee seeing a particular species of bird or wildlife."
+  }
+];
+
+const seasons = isEn ? seasonsEn : seasonsAr;
+const environment = isEn ? environmentEn : environmentAr;
 ---
-<section id="الاستراتيجية-الموسمية" class="oasis-grid bg-white py-16 lg:py-24">
+<section id={isEn ? 'preparing' : 'الاستراتيجية-الموسمية'} class="oasis-grid bg-white py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="max-w-3xl">
-      <p class="text-sm font-black text-gold-600">متى تزور وكيف تستعد</p>
-      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">رتّب الزيارة حسب الظروف الفعلية</h2>
-      <p class="mt-5 text-lg leading-9 text-palm-900/70">سيناريوهات تساعد على تعديل خطتك حسب الطقس المتحقق وساعات الدخول. لا تتضمن هذه الصفحة متوسطات حرارة موسمية موثقة.</p>
+      <p class="text-sm font-black text-gold-600">{isEn ? 'When to visit and how to prepare' : 'متى تزور وكيف تستعد'}</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">{isEn ? 'Arrange the visit according to the actual conditions' : 'رتّب الزيارة حسب الظروف الفعلية'}</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">{isEn ? 'Scenarios that help you adjust your plan according to the weather actually occurring and the entry hours. This page does not include documented seasonal temperature averages.' : 'سيناريوهات تساعد على تعديل خطتك حسب الطقس المتحقق وساعات الدخول. لا تتضمن هذه الصفحة متوسطات حرارة موسمية موثقة.'}</p>
     </div>
 
     <div class="mt-10 max-w-full overflow-x-auto rounded-[2rem] border border-palm-900/10 bg-sand-50">
       <table class="w-full text-right text-sm">
         <thead class="bg-palm-900 text-white">
           <tr>
-            <th class="px-4 py-3 font-black">الحالة</th>
-            <th class="px-4 py-3 font-black">متى تنطبق</th>
-            <th class="px-4 py-3 font-black">الحرارة</th>
-            <th class="px-4 py-3 font-black">الأمطار</th>
-            <th class="px-4 py-3 font-black">نصيحة الزيارة</th>
-            <th class="px-4 py-3 font-black">مناسب لـ</th>
+            <th class="px-4 py-3 font-black">{isEn ? 'Condition' : 'الحالة'}</th>
+            <th class="px-4 py-3 font-black">{isEn ? 'When it applies' : 'متى تنطبق'}</th>
+            <th class="px-4 py-3 font-black">{isEn ? 'Temperature' : 'الحرارة'}</th>
+            <th class="px-4 py-3 font-black">{isEn ? 'Rain' : 'الأمطار'}</th>
+            <th class="px-4 py-3 font-black">{isEn ? 'Visit advice' : 'نصيحة الزيارة'}</th>
+            <th class="px-4 py-3 font-black">{isEn ? 'Suitable for' : 'مناسب لـ'}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-palm-900/10">
@@ -99,6 +161,6 @@ const environment = [
       ))}
     </div>
 
-    <p class="mt-8 max-w-4xl text-xs leading-6 text-palm-900/55">راجع النشرة والتنبيهات الرسمية الحالية؛ هذه النصائح لا تثبت فتح الحديقة أو أي مرفق.</p>
+    <p class="mt-8 max-w-4xl text-xs leading-6 text-palm-900/55">{isEn ? 'Check the current official bulletin and alerts; this advice does not confirm the opening of the park or any facility.' : 'راجع النشرة والتنبيهات الرسمية الحالية؛ هذه النصائح لا تثبت فتح الحديقة أو أي مرفق.'}</p>
   </div>
 </section>

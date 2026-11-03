@@ -1,32 +1,75 @@
 ---
 import Logo from './Logo.astro';
+
+interface Props {
+  lang?: 'ar' | 'en';
+}
+
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
 ---
 <header class="sticky top-0 z-50 border-b border-palm-900/10 bg-sand-50/95 backdrop-blur-xl">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
-    <Logo />
-    <nav aria-label="التنقل الرئيسي" class="hidden items-center gap-3 text-[13px] font-black text-palm-900 lg:flex">
-      <a class="hover:text-gold-600" href="/#عن-الحديقة">عن الحديقة</a>
-      <a class="hover:text-gold-600" href="/#خطط-للزيارة">خطط للزيارة</a>
-      <a class="hover:text-gold-600" href="/#مواعيد-الزيارة">المواعيد</a>
-      <a class="hover:text-gold-600" href="/#المرافق">المرافق</a>
-      <a class="hover:text-gold-600" href="/#الطقس">الطقس</a>
-      <a class="hover:text-gold-600" href="/#الاستراتيجية-الموسمية">الاستعداد</a>
-      <a class="hover:text-gold-600" href="/#الوصول">الموقع والوصول</a>
-      <a class="hover:text-gold-600" href="/#التجربة">تجربة الزيارة</a>
-      <a class="hover:text-gold-600" href="/#خطط-حسب-الفئة">خطط حسب الفئة</a>
-      <a class="hover:text-gold-600" href="/#المسؤولية">المسؤولية</a>
-      <a class="hover:text-gold-600" href="/#الأسئلة">الأسئلة الشائعة</a>
-    </nav>
-    <a href="https://maps.app.goo.gl/o2EdMT6dC5qwHHun7" target="_blank" rel="noopener noreferrer" class="rounded-full bg-palm-900 px-4 py-2.5 text-xs font-black text-white no-underline shadow-sm hover:bg-palm-700 sm:text-sm">الخريطة</a>
+    <Logo lang={lang} />
+    {isEn ? (
+      <nav aria-label="Main navigation" class="hidden items-center gap-2.5 text-[12.5px] font-black text-palm-900 lg:flex">
+        <a class="hover:text-gold-600" href="/en/guides/">Visitor guides</a>
+        <a class="hover:text-gold-600" href="/en/#overview">Overview</a>
+        <a class="hover:text-gold-600" href="/en/#plan">Plan</a>
+        <a class="hover:text-gold-600" href="/en/#hours">Hours</a>
+        <a class="hover:text-gold-600" href="/en/#walkway">Walkway</a>
+        <a class="hover:text-gold-600" href="/en/#facilities">Facilities</a>
+        <a class="hover:text-gold-600" href="/en/#weather">Weather</a>
+        <a class="hover:text-gold-600" href="/en/#access">Access</a>
+        <a class="hover:text-gold-600" href="/en/#experience">Experience</a>
+        <a class="hover:text-gold-600" href="/en/#guides">All guides</a>
+        <a class="hover:text-gold-600" href="/en/#faq">FAQ</a>
+        <a class="hover:text-gold-600" href="/en/#sources">Sources</a>
+        <a class="hover:text-gold-600" href="/" hreflang="ar" lang="ar">العربية</a>
+      </nav>
+    ) : (
+      <nav aria-label="التنقل الرئيسي" class="hidden items-center gap-3 text-[13px] font-black text-palm-900 lg:flex">
+        <a class="hover:text-gold-600" href="/guides/">أدلة الزيارة</a>
+        <a class="hover:text-gold-600" href="/#عن-الحديقة">عن الحديقة</a>
+        <a class="hover:text-gold-600" href="/#خطط-للزيارة">خطط للزيارة</a>
+        <a class="hover:text-gold-600" href="/#مواعيد-الزيارة">المواعيد</a>
+        <a class="hover:text-gold-600" href="/#المرافق">المرافق</a>
+        <a class="hover:text-gold-600" href="/#الطقس">الطقس</a>
+        <a class="hover:text-gold-600" href="/#الاستراتيجية-الموسمية">الاستعداد</a>
+        <a class="hover:text-gold-600" href="/#الوصول">الموقع والوصول</a>
+        <a class="hover:text-gold-600" href="/#التجربة">تجربة الزيارة</a>
+        <a class="hover:text-gold-600" href="/#خطط-حسب-الفئة">خطط حسب الفئة</a>
+        <a class="hover:text-gold-600" href="/#المسؤولية">المسؤولية</a>
+        <a class="hover:text-gold-600" href="/#الأسئلة">الأسئلة الشائعة</a>
+      </nav>
+    )}
+    <a href="https://maps.app.goo.gl/o2EdMT6dC5qwHHun7" target="_blank" rel="noopener noreferrer" class="rounded-full bg-palm-900 px-4 py-2.5 text-xs font-black text-white no-underline shadow-sm hover:bg-palm-700 sm:text-sm">{isEn ? 'Map' : 'الخريطة'}</a>
   </div>
-  <nav aria-label="التنقل السريع" class="overflow-x-auto px-5 pb-2 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-    <div class="flex w-max gap-2 text-[12px] font-black text-palm-900">
-      <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#مواعيد-الزيارة">المواعيد</a>
-      <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#الوصول">الموقع</a>
-      <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#المرافق">المرافق</a>
-      <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#الطقس">الطقس</a>
-      <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#التجربة">التجربة</a>
-      <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#الأسئلة">الأسئلة</a>
-    </div>
-  </nav>
+  {isEn ? (
+    <nav aria-label="Quick navigation" class="overflow-x-auto px-5 pb-2 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div class="flex w-max gap-2 text-[12px] font-black text-palm-900">
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/guides/">Visitor guides</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/#hours">Hours</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/#access">Access</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/#facilities">Facilities</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/#weather">Weather</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/#experience">Experience</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/#guides">All guides</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/en/#faq">FAQ</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/" hreflang="ar" lang="ar">العربية</a>
+      </div>
+    </nav>
+  ) : (
+    <nav aria-label="التنقل السريع" class="overflow-x-auto px-5 pb-2 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div class="flex w-max gap-2 text-[12px] font-black text-palm-900">
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/guides/">أدلة الزيارة</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#مواعيد-الزيارة">المواعيد</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#الوصول">الموقع</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#المرافق">المرافق</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#الطقس">الطقس</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#التجربة">التجربة</a>
+        <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline" href="/#الأسئلة">الأسئلة</a>
+      </div>
+    </nav>
+  )}
 </header>

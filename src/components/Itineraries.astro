@@ -1,6 +1,12 @@
 ---
 // خطط زيارة مخصّصة حسب نوع الزائر + مسار عام نصف يوم / يوم كامل.
-const byCrowd = [
+interface Props {
+  lang?: 'ar' | 'en';
+}
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
+
+const byCrowdAr = [
   {
     "icon": "👨‍👩‍👧‍👦",
     "title": "عائلة مع أطفال",
@@ -36,7 +42,7 @@ const byCrowd = [
   }
 ];
 
-const general = [
+const generalAr = [
   {
     "icon": "⏳",
     "title": "زيارة أقصر",
@@ -50,13 +56,67 @@ const general = [
     "body": "أضف نشاطاً ثقافياً أو مرفقاً فقط إذا تأكد فتحه وسعره وساعاته. لا نفترض وجود فعالية أو إمكان الدخول مجدداً في الموعد نفسه."
   }
 ];
+
+const byCrowdEn = [
+  {
+    "icon": "👨‍👩‍👧‍👦",
+    "title": "Family with children",
+    "duration": "Flexible plan",
+    "steps": [
+      "Check that the play area is open and suitable for the child's age.",
+      "Choose an open route with rests according to the group's ability.",
+      "Watch the children near the water and the roads, and agree on a meeting point.",
+      "Check the food and the toilets you will rely on."
+    ]
+  },
+  {
+    "icon": "📸",
+    "title": "Photography and nature",
+    "duration": "Depends on light and entry",
+    "steps": [
+      "Check the entry hours and the weather conditions before choosing the photography time.",
+      "Photograph the scenes available from the permitted paths.",
+      "Respect the privacy of visitors and ask for consent to photograph people.",
+      "Do not cross a barrier to get a photography angle."
+    ]
+  },
+  {
+    "icon": "♿",
+    "title": "Older adults and wheelchairs",
+    "duration": "Depends on need",
+    "steps": [
+      "Check the entrance, the parking, and the suitable toilet.",
+      "Ask about the nature of the surface, the slopes, and the seating on the route you intend.",
+      "Choose a shorter part when needed and plan for rest and return.",
+      "This guide does not assume the existence of a stair-free loop or continuous shade."
+    ]
+  }
+];
+
+const generalEn = [
+  {
+    "icon": "⏳",
+    "title": "Shorter visit",
+    "duration": "Without a fixed time",
+    "body": "Choose an open part of the walkway and a suitable rest, after checking the entrance and the return. It is not necessary to gather all the facilities in one round."
+  },
+  {
+    "icon": "🗓️",
+    "title": "Broader visit",
+    "duration": "Depends on operation",
+    "body": "Add a cultural activity or a facility only if its opening, price, and hours are confirmed. We do not assume there is an event or the possibility of re-entering at the same time."
+  }
+];
+
+const byCrowd = isEn ? byCrowdEn : byCrowdAr;
+const general = isEn ? generalEn : generalAr;
 ---
-<section id="خطط-حسب-الفئة" class="bg-sand-50 py-16 lg:py-24">
+<section id={isEn ? 'plans' : 'خطط-حسب-الفئة'} class="bg-sand-50 py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="max-w-3xl">
-      <p class="text-sm font-black text-gold-600">خطط حسب نوع زوارك</p>
-      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">مسارات مقترحة لكل فئة</h2>
-      <p class="mt-5 text-lg leading-9 text-palm-900/70">ثلاثة مسارات موجّهة لاحتياجات مختلفة، يليها مساران عامّان حسب الوقت المتاح لزيارتك.</p>
+      <p class="text-sm font-black text-gold-600">{isEn ? 'Plans according to your type of visitors' : 'خطط حسب نوع زوارك'}</p>
+      <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">{isEn ? 'Suggested routes for each category' : 'مسارات مقترحة لكل فئة'}</h2>
+      <p class="mt-5 text-lg leading-9 text-palm-900/70">{isEn ? 'Three routes directed at different needs, followed by two general routes according to the time available for your visit.' : 'ثلاثة مسارات موجّهة لاحتياجات مختلفة، يليها مساران عامّان حسب الوقت المتاح لزيارتك.'}</p>
     </div>
 
     <div class="mt-10 grid gap-5 md:grid-cols-3">

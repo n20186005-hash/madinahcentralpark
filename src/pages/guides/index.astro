@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import { PARK } from '../../lib/parkGuide';
+import { CATEGORY_WITH_GUIDES, allGuides, guidePath } from '../../data/guides';
+
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const enUrl = Astro.site ? new URL('/en/guides/', Astro.site).href : undefined;
+const pageTitle = 'أدلة زيارة حديقة الملك فهد المركزية في المدينة المنورة';
+const pageDescription =
+  'مركز أدلة زيارة حديقة الملك فهد المركزية بالمدينة المنورة: المواعيد والموقع والصور والممشى، والمرافق العائلية، والثقافة والسوق التراثي، والطعام، وبرامج نصف اليوم، والوصول من المطار والقطار.';
+
+const alternates = [
+  { hreflang: 'ar-SA', href: pageUrl },
+  { hreflang: 'en', href: enUrl },
+  { hreflang: 'x-default', href: pageUrl }
+];
+
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  ...(pageUrl ? { '@id': `${pageUrl}#collection` } : {}),
+  name: pageTitle,
+  description: pageDescription,
+  inLanguage: 'ar-SA',
+  about: { '@type': ['TouristAttraction', 'Park'], name: PARK.nameAr },
+  hasPart: allGuides.map((guide) => ({
+    '@type': 'Article',
+    headline: guide.h1,
+    ...(Astro.site ? { url: new URL(guidePath(guide.slug), Astro.site).href } : {})
+  }))
+};
+---
+<BaseLayout title={pageTitle} description={pageDescription} jsonLd={[listSchema]} alternates={alternates}>
+  <header class="relative isolate overflow-hidden bg-night-950 text-white">
+    <div class="oasis-grid absolute inset-0 opacity-40" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-5xl px-5 pb-14 pt-24 lg:px-8 lg:pb-16">
+      <nav aria-label="مسار التنقل" class="flex flex-wrap items-center gap-2 text-xs font-black text-sand-100/70">
+        <a class="text-sand-100/80 no-underline hover:text-gold-400" href="/">الرئيسية</a>
+        <span aria-hidden="true">›</span>
+        <span>أدلة الزيارة</span>
+      </nav>
+      <a class="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-400/50 px-4 py-1.5 text-xs font-black text-gold-400 no-underline hover:bg-gold-400/10" href={enUrl} hreflang="en" lang="en">Read this page in English</a>
+      <h1 class="mt-6 text-4xl font-black leading-tight sm:text-5xl">أدلة زيارة حديقة الملك فهد المركزية</h1>
+      <p class="mt-5 max-w-3xl text-lg leading-9 text-sand-100/85">
+        مجموعة أدلة مستقلة تُجيب عن أسئلة الزائر قبل وبعد الوصول: المواعيد والموقع والصور والممشى، والمرافق واحتياجات العائلة، والثقافة والسوق التراثي، والطعام، وبرامج نصف اليوم، والوصول من المطار والقطار.
+      </p>
+      <p class="mt-6 text-sm font-black text-gold-400">{allGuides.length} دليلاً منظماً في ستة أبواب</p>
+    </div>
+  </header>
+
+  <nav aria-label="أبواب الأدلة" class="sticky top-[52px] z-40 border-b border-palm-900/10 bg-sand-50/95 backdrop-blur-xl lg:top-[60px]">
+    <div class="mx-auto max-w-7xl overflow-x-auto px-5 py-3 lg:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div class="flex w-max gap-2 text-[12px] font-black text-palm-900">
+        {CATEGORY_WITH_GUIDES.map((category) => (
+          <a class="whitespace-nowrap rounded-full border border-palm-900/15 bg-white px-3 py-1.5 no-underline hover:border-gold-400" href={`#${category.id}`}>{category.label}</a>
+        ))}
+      </div>
+    </div>
+  </nav>
+
+  {CATEGORY_WITH_GUIDES.map((category) => (
+    <section id={category.id} class="border-b border-palm-900/10 bg-sand-50 py-14 lg:py-20">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8">
+        <div class="grid gap-6 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+          <h2 class="text-3xl font-black text-palm-900 sm:text-4xl">{category.label}</h2>
+          <p class="text-base leading-8 text-palm-900/68">{category.note}</p>
+        </div>
+        <div class="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {category.guides.map((guide) => <GuideCard guide={guide} />)}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <h2 class="text-3xl font-black text-palm-900">ملاحظة منهجية</h2>
+      <p class="mt-4 leading-9 text-palm-900/70">
+        كل دليل هنا يميز بين ما تنشره الجهات الرسمية وبين لقطات الأطراف الثالثة القابلة للتغير، ويعرض التعارض بين المصادر عند وجوده بدل أن يجزم بغير دليل. الساعات والرسوم والمسافات قابلة للتحديث، فتحقق من الجهة المشغلة قبل الزيارة.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a class="rounded-full bg-palm-900 px-5 py-3 text-sm font-black text-white no-underline hover:bg-palm-700" href={PARK.mapsUrl} target="_blank" rel="noopener noreferrer">الاتجاهات إلى الحديقة</a>
+        <a class="rounded-full border border-palm-900/20 bg-white px-5 py-3 text-sm font-black text-palm-900 no-underline hover:border-gold-400" href="/#المصادر">مصادر الدليل</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

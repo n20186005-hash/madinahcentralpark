@@ -1,23 +1,59 @@
 ---
 import Logo from './Logo.astro';
+
+interface Props {
+  lang?: 'ar' | 'en';
+}
+
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
 ---
 <footer class="border-t border-white/10 bg-night-950 text-sand-100">
   <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8">
     <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
       <div>
-        <div class="inline-flex rounded-2xl bg-sand-50 p-2"><Logo compact={true} /></div>
-        <p class="mt-5 max-w-xl text-sm leading-8 text-sand-100/80">هذا الموقع مشروع إرشادي مستقل غير ربحي للزوار، ولا يتبع أي جهة حكومية أو منظمة رسمية.</p>
+        <div class="inline-flex rounded-2xl bg-sand-50 p-2"><Logo compact={true} lang={lang} /></div>
+        <p class="mt-5 max-w-xl text-sm leading-8 text-sand-100/80">{isEn ? 'This site is an independent, non-commercial visitor project and is not affiliated with any government body or official organisation.' : 'هذا الموقع مشروع إرشادي مستقل غير ربحي للزوار، ولا يتبع أي جهة حكومية أو منظمة رسمية.'}</p>
         <div class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-black text-white">
-          <a href="/privacy-policy/">سياسة الخصوصية</a>
-          <a href="/terms/">شروط الخدمة</a>
-          <a href="/cookie-settings/">إعدادات ملفات تعريف الارتباط</a>
+          <a href="/privacy-policy/">{isEn ? 'Privacy policy' : 'سياسة الخصوصية'}</a>
+          <a href="/terms/">{isEn ? 'Terms of service' : 'شروط الخدمة'}</a>
+          <a href="/cookie-settings/">{isEn ? 'Cookie settings' : 'إعدادات ملفات تعريف الارتباط'}</a>
         </div>
+        {isEn ? (
+          <nav aria-label="Visitor guides" class="mt-6">
+            <p class="text-xs font-black text-gold-400">Visitor guides</p>
+            <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-black text-sand-100/80">
+              <a class="hover:text-white" href="/en/guides/">All guides</a>
+              <a class="hover:text-white" href="/en/guides/opening-hours/">Hours</a>
+              <a class="hover:text-white" href="/en/guides/location/">Location</a>
+              <a class="hover:text-white" href="/en/guides/photos/">Photos</a>
+              <a class="hover:text-white" href="/en/guides/facilities/">Facilities</a>
+              <a class="hover:text-white" href="/en/guides/heritage-district/">Heritage district</a>
+              <a class="hover:text-white" href="/en/guides/restaurants/">Food</a>
+              <a class="hover:text-white" href="/en/guides/half-day-plan/">Half day</a>
+            </div>
+          </nav>
+        ) : (
+          <nav aria-label="أدلة الزيارة" class="mt-6">
+            <p class="text-xs font-black text-gold-400">أدلة الزيارة</p>
+            <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-black text-sand-100/80">
+              <a class="hover:text-white" href="/guides/">كل الأدلة</a>
+              <a class="hover:text-white" href="/guides/opening-hours/">المواعيد</a>
+              <a class="hover:text-white" href="/guides/location/">الموقع</a>
+              <a class="hover:text-white" href="/guides/photos/">الصور</a>
+              <a class="hover:text-white" href="/guides/facilities/">المرافق</a>
+              <a class="hover:text-white" href="/guides/heritage-district/">الحي التراثي</a>
+              <a class="hover:text-white" href="/guides/restaurants/">الطعام</a>
+              <a class="hover:text-white" href="/guides/half-day-plan/">نصف يوم</a>
+            </div>
+          </nav>
+        )}
       </div>
       <div class="space-y-4 text-sm leading-8 text-sand-100/80">
-        <p>تستند معلومات الحديقة إلى مواد عامة تمت مقارنتها بما تنشره أمانة منطقة المدينة المنورة، وهيئة تطوير منطقة المدينة المنورة عبر منصة «المدينة»، والهيئة السعودية للسياحة عبر «روح السعودية». هذه الروابط للتوثيق ولا تعني تبعية الدليل لتلك الجهات.</p>
-        <p>بيانات الطقس تُجلب من خدمة Open-Meteo عند بناء الموقع وتُخزَّن داخل الصفحة الثابتة، ولا يرسل متصفحك أي طلب طقس إلى جهات خارجية.</p>
-        <p>الرسم التوضيحي عمل أصلي لهذا الدليل، وليس صورة أو خريطة لحديقة الملك فهد.</p>
-        <p>© 2026 دليل حديقة الملك فهد المركزية – المدينة المنورة. جميع الحقوق محفوظة.</p>
+        <p>{isEn ? 'Park information is based on public material compared against what the Madinah Region Municipality, the Madinah Region Development Authority through the Madinah Platform, and the Saudi Tourism Authority through Visit Saudi publish. These links are for verification and do not imply any affiliation.' : 'تستند معلومات الحديقة إلى مواد عامة تمت مقارنتها بما تنشره أمانة منطقة المدينة المنورة، وهيئة تطوير منطقة المدينة المنورة عبر منصة «المدينة»، والهيئة السعودية للسياحة عبر «روح السعودية». هذه الروابط للتوثيق ولا تعني تبعية الدليل لتلك الجهات.'}</p>
+        <p>{isEn ? 'Weather readings are fetched from the Open-Meteo service at build time and stored inside the static page; your browser sends no weather request to external parties.' : 'بيانات الطقس تُجلب من خدمة Open-Meteo عند بناء الموقع وتُخزَّن داخل الصفحة الثابتة، ولا يرسل متصفحك أي طلب طقس إلى جهات خارجية.'}</p>
+        <p>{isEn ? 'The illustration is an original work for this guide, not a photograph or map of King Fahad Central Park.' : 'الرسم التوضيحي عمل أصلي لهذا الدليل، وليس صورة أو خريطة لحديقة الملك فهد.'}</p>
+        <p>{isEn ? '© 2026 King Fahad Central Park Guide — Madinah. All rights reserved.' : '© 2026 دليل حديقة الملك فهد المركزية – المدينة المنورة. جميع الحقوق محفوظة.'}</p>
       </div>
     </div>
   </div>

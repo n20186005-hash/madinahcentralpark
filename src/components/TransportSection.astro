@@ -1,6 +1,12 @@
 ---
 // وسائل الوصول إلى الحديقة — بمعلومات عملية محايدة من دون أرقام خطوط ثابتة حتى لا يُرشد لمسار قد يتغير.
-const modes = [
+interface Props {
+  lang?: 'ar' | 'en';
+}
+const { lang = 'ar' } = Astro.props;
+const isEn = lang === 'en';
+
+const modesAr = [
   {
     "icon": "📍",
     "title": "تحديد المكان الصحيح",
@@ -48,7 +54,7 @@ const modes = [
   }
 ];
 
-const summary = [
+const summaryAr = [
   {
     "mode": "النقل من نقطة وصولك",
     "dist": "يتحدد بالمسار",
@@ -65,24 +71,93 @@ const summary = [
     "time": "حسب الجدول"
   }
 ];
+
+const modesEn = [
+  {
+    "icon": "📍",
+    "title": "Identifying the correct place",
+    "badge": "Al-Hadiqah district",
+    "steps": [
+      "Use the pinned location link or the full name “King Fahad Central Park” in Madinah, not another park that carries the name King Fahad.",
+      "The location code is CJC4+2F and the address is Al-Hadiqah district, Madinah 42383. Match the entrance with the signage on arrival."
+    ]
+  },
+  {
+    "icon": "🚕",
+    "title": "Transport from your place of stay or arrival",
+    "badge": "Depends on the starting point",
+    "steps": [
+      "Plan transport from the airport, the station, or your place of stay according to the service available to you at the time. Check the fare and the drop-off point inside the service provider's app or its official channel.",
+      "This guide does not confirm a transfer time, a road distance, or a guaranteed availability of a taxi."
+    ]
+  },
+  {
+    "icon": "🚌",
+    "title": "Buses",
+    "badge": "Check the route",
+    "steps": [
+      "Review the transport operator for the current line, stop, and schedule. We do not assume there is a direct line to a specific entrance.",
+      "Check the final part for walking, crossing, shade, and accessibility; we do not guarantee a short or connected walkway from the nearest stop."
+    ]
+  },
+  {
+    "icon": "🚗",
+    "title": "Car and parking",
+    "badge": "Entrance open",
+    "steps": [
+      "The municipality mentions main and parallel parking in its dated description. Check the open parking, the fees, and the event restrictions on the day of your visit.",
+      "Choose a clear meeting point for the return, and do not stop outside the permitted locations."
+    ]
+  },
+  {
+    "icon": "🚶",
+    "title": "Walking inside the park",
+    "badge": "Depends on ability",
+    "steps": [
+      "Official sources describe walking, running, and cycling paths; choose the open section that suits you.",
+      "The general distance south of the Prophet's Mosque is not the length of a safe walking path. Assess the crossing, the weather, and the entry hours before arranging a walk from outside the park."
+    ]
+  }
+];
+
+const summaryEn = [
+  {
+    "mode": "Transport from your arrival point",
+    "dist": "Determined by the route",
+    "time": "Check at the time of travel"
+  },
+  {
+    "mode": "Parking and entrance",
+    "dist": "Choose the open location",
+    "time": "Depends on operation"
+  },
+  {
+    "mode": "Buses and the final walk",
+    "dist": "Review the operator",
+    "time": "Depends on the schedule"
+  }
+];
+
+const modes = isEn ? modesEn : modesAr;
+const summary = isEn ? summaryEn : summaryAr;
 ---
-<section id="الوصول" class="bg-palm-900 py-16 text-white lg:py-24">
+<section id={isEn ? 'access' : 'الوصول'} class="bg-palm-900 py-16 text-white lg:py-24">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="grid gap-10 lg:grid-cols-[.7fr_1.3fr]">
       <div>
-        <p class="text-sm font-black text-gold-400">الوصول والخريطة</p>
-        <h2 class="mt-3 text-4xl font-black sm:text-5xl">الوصول إلى المكان الصحيح وتخطيط الانتقال</h2>
-        <div class="mt-7 space-y-5 text-sm leading-8 text-white/78"><p>تقع الحديقة في حي الحديقة بالمدينة المنورة. يذكر المصدر الرسمي أنها جنوب المسجد النبوي بنحو خمسة كيلومترات؛ هذا وصف جغرافي تقريبي وليس مسافة طريق أو زمن وصول.</p><p>طابق اسم المكان ورمز الموقع CJC4+2F مع رابط الخريطة، ثم تحقق من المدخل المفتوح ووسيلة النقل المناسبة لنقطة انطلاقك.</p></div>
+        <p class="text-sm font-black text-gold-400">{isEn ? 'Access and map' : 'الوصول والخريطة'}</p>
+        <h2 class="mt-3 text-4xl font-black sm:text-5xl">{isEn ? 'Reaching the right place and planning the transfer' : 'الوصول إلى المكان الصحيح وتخطيط الانتقال'}</h2>
+        <div class="mt-7 space-y-5 text-sm leading-8 text-white/78"><p>{isEn ? 'The park is located in Al-Hadiqah district in Madinah. The official source mentions that it is about five kilometres south of the Prophet\u2019s Mosque; this is an approximate geographic description and not a road distance or a travel time.' : 'تقع الحديقة في حي الحديقة بالمدينة المنورة. يذكر المصدر الرسمي أنها جنوب المسجد النبوي بنحو خمسة كيلومترات؛ هذا وصف جغرافي تقريبي وليس مسافة طريق أو زمن وصول.'}</p><p>{isEn ? 'Match the place name and the location code CJC4+2F with the map link, then check the open entrance and the transport means suitable for your starting point.' : 'طابق اسم المكان ورمز الموقع CJC4+2F مع رابط الخريطة، ثم تحقق من المدخل المفتوح ووسيلة النقل المناسبة لنقطة انطلاقك.'}</p></div>
         <div class="mt-8 overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 ring-white/10">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6461.616883614993!2d39.6061752!3d24.4200407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15bdc08c81f9c289%3A0x3c32ee418fc8dbbc!2sKing%20Fahad%20Central%20Park!5e1!3m2!1sar!2ssa!4v1788420936620!5m2!1sar!2ssa&hl=ar&gl=sa"
+            src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6461.616883614993!2d39.6061752!3d24.4200407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15bdc08c81f9c289%3A0x3c32ee418fc8dbbc!2sKing%20Fahad%20Central%20Park!5e1!3m2!1sar!2ssa!4v1788420936620!5m2!1sar!2ssa&hl=${isEn ? 'en' : 'ar'}&gl=sa`}
             width="100%"
             height="360"
             style="border:0"
             allowfullscreen
             loading="lazy"
             referrerpolicy="strict-origin-when-cross-origin"
-            title="خريطة حديقة الملك فهد المركزية في المدينة المنورة"
+            title={isEn ? 'Map of King Fahad Central Park in Madinah' : 'خريطة حديقة الملك فهد المركزية في المدينة المنورة'}
           ></iframe>
         </div>
       </div>
@@ -105,7 +180,7 @@ const summary = [
         <div class="max-w-full overflow-x-auto rounded-3xl border border-white/10">
           <table class="w-full text-right text-sm">
             <thead class="bg-white/10 text-white">
-              <tr><th class="px-4 py-3 font-black">الوسيلة</th><th class="px-4 py-3 font-black">المسافة التقريبية</th><th class="px-4 py-3 font-black">الزمن التقريبي</th></tr>
+              <tr><th class="px-4 py-3 font-black">{isEn ? 'Means' : 'الوسيلة'}</th><th class="px-4 py-3 font-black">{isEn ? 'Approximate distance' : 'المسافة التقريبية'}</th><th class="px-4 py-3 font-black">{isEn ? 'Approximate time' : 'الزمن التقريبي'}</th></tr>
             </thead>
             <tbody class="divide-y divide-white/10 text-white/80">
               {summary.map((r) => (

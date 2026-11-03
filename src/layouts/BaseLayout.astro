@@ -9,15 +9,37 @@ interface Props {
   image?: string;
   jsonLd?: unknown | unknown[];
   noindex?: boolean;
+  lang?: string;
+  dir?: 'rtl' | 'ltr';
+  siteName?: string;
+  ogLocale?: string;
+  alternates?: { hreflang: string; href?: string }[];
 }
 
-const { title, description, image = '/images/park-concept.svg', jsonLd, noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  image = '/images/park-concept.svg',
+  jsonLd,
+  noindex = false,
+  lang = 'ar-SA',
+  dir = 'rtl',
+  siteName = 'حديقة الملك فهد المركزية بالمدينة المنورة',
+  ogLocale = 'ar_SA',
+  alternates
+} = Astro.props;
 const absolutePageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const absoluteImageUrl = Astro.site ? new URL(image, Astro.site).href : undefined;
 const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+const hreflang = alternates
+  ? alternates.filter((entry) => Boolean(entry.href))
+  : [
+      { hreflang: 'ar-SA', href: absolutePageUrl },
+      { hreflang: 'x-default', href: absolutePageUrl }
+    ];
 ---
 <!doctype html>
-<html lang="ar-SA" dir="rtl">
+<html lang={lang} dir={dir}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -30,26 +52,25 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     )}
     <title>{title}</title>
     {absolutePageUrl && <link rel="canonical" href={absolutePageUrl} />}
-    <link rel="alternate" hreflang="ar-SA" href={absolutePageUrl} />
-    <link rel="alternate" hreflang="x-default" href={absolutePageUrl} />
+    {hreflang.map((entry) => <link rel="alternate" hreflang={entry.hreflang} href={entry.href} />)}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="application-name" content="حديقة الملك فهد المركزية" />
+    <meta name="application-name" content={siteName} />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="حديقة الملك فهد المركزية" />
+    <meta name="apple-mobile-web-app-title" content={siteName} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ar_SA" />
-    <meta property="og:site_name" content="حديقة الملك فهد المركزية بالمدينة المنورة" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {absolutePageUrl && <meta property="og:url" content={absolutePageUrl} />}
     {absoluteImageUrl && <meta property="og:image" content={absoluteImageUrl} />}
-    <meta property="og:image:alt" content="رسم مفاهيمي أصلي؛ ليس صورة للموقع" />
+    <meta property="og:image:alt" content={lang === 'en' ? 'An original conceptual illustration; not a photograph of the site' : 'رسم مفاهيمي أصلي؛ ليس صورة للموقع'} />
     {absoluteImageUrl && <meta name="twitter:image" content={absoluteImageUrl} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -58,9 +79,9 @@ const ldItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <script is:inline src="/analytics.js"></script>
   </head>
   <body>
-    <Header />
+    <Header lang={lang === 'en' ? 'en' : 'ar'} />
     <main><slot /></main>
-    <Footer />
+    <Footer lang={lang === 'en' ? 'en' : 'ar'} />
     <script is:inline>
       if ('serviceWorker' in navigator && location.protocol === 'https:' && !location.hostname.startsWith('localhost')) {
         window.addEventListener('load', () => {

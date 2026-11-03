@@ -1,0 +1,145 @@
+---
+import type { Guide } from '../lib/parkGuide';
+import { PARK } from '../lib/parkGuide';
+import { CATEGORIES, relatedGuides } from '../data/guides';
+import GuideCard from './GuideCard.astro';
+
+interface Props {
+  guide: Guide;
+  lang?: 'ar' | 'en';
+  alternateHref?: string;
+}
+
+const { guide, lang = 'ar', alternateHref } = Astro.props;
+const isEn = lang === 'en';
+const category = CATEGORIES.find((item) => item.id === guide.category);
+const related = relatedGuides(guide);
+const t = {
+  home: isEn ? 'Home' : 'الرئيسية',
+  hub: isEn ? 'Visitor guides' : 'أدلة الزيارة',
+  hubHref: isEn ? '/en/guides/' : '/guides/',
+  breadcrumbAria: isEn ? 'Breadcrumb' : 'مسار التنقل',
+  updated: isEn ? 'Guide last updated' : 'آخر تحديث للدليل',
+  glance: isEn ? 'At a glance' : 'في سطور',
+  faqHeading: isEn ? 'Frequently asked questions' : 'أسئلة شائعة عن هذه الوجهة',
+  methodStrong: isEn ? 'Methodology note:' : 'ملاحظة منهجية:',
+  methodText: isEn
+    ? 'This guide separates what official bodies publish from third-party snapshots that change over time. Hours, fees and distances can be updated, so confirm with the operator before you visit. For more detail see'
+    : 'نميز في هذا الدليل بين ما تنشره الجهات الرسمية وبين لقطات الأطراف الثالثة القابلة للتغير. الساعات والرسوم والمسافات قابلة للتحديث، فتحقق من الجهة المشغلة قبل الزيارة. لمزيد من التفاصيل راجع',
+  methodLink: isEn ? 'the sources section on the homepage' : 'قسم المصادر في الصفحة الرئيسية',
+  methodLinkHref: isEn ? '/en/#sources' : '/#المصادر',
+  directions: isEn ? 'Directions to the park' : 'الاتجاهات إلى الحديقة',
+  allGuides: isEn ? 'All visitor guides' : 'كل أدلة الزيارة',
+  relatedHeading: isEn ? 'Related guides' : 'أدلة ذات صلة',
+  switchLabel: isEn ? 'اقرأ هذا الدليل بالعربية' : 'Read this guide in English',
+  switchLang: isEn ? 'ar' : 'en'
+};
+const categoryLabel = category ? (isEn ? category.labelEn : category.label) : undefined;
+---
+<article>
+  <header class="relative isolate overflow-hidden bg-night-950 text-white">
+    <div class="oasis-grid absolute inset-0 opacity-40" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-5xl px-5 pb-14 pt-24 lg:px-8 lg:pb-16">
+      <nav aria-label={t.breadcrumbAria} class="flex flex-wrap items-center gap-2 text-xs font-black text-sand-100/70">
+        <a class="text-sand-100/80 no-underline hover:text-gold-400" href={isEn ? '/en/' : '/'}>{t.home}</a>
+        <span aria-hidden="true">›</span>
+        <a class="text-sand-100/80 no-underline hover:text-gold-400" href={t.hubHref}>{t.hub}</a>
+        {categoryLabel && (
+          <>
+            <span aria-hidden="true">›</span>
+            <span>{categoryLabel}</span>
+          </>
+        )}
+      </nav>
+      {alternateHref && (
+        <a class="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-400/50 px-4 py-1.5 text-xs font-black text-gold-400 no-underline hover:bg-gold-400/10" href={alternateHref} hreflang={t.switchLang} lang={t.switchLang}>
+          {t.switchLabel}
+        </a>
+      )}
+      <h1 class="mt-6 text-4xl font-black leading-tight sm:text-5xl">{guide.h1}</h1>
+      <p class="mt-4 max-w-3xl text-lg leading-9 text-gold-400">{guide.subtitle}</p>
+      <p class="mt-5 max-w-3xl text-base leading-9 text-sand-100/85">{guide.lede}</p>
+      <p class="mt-6 text-xs font-black text-sand-100/60">{t.updated}: <bdi dir="ltr">{guide.updated}</bdi></p>
+    </div>
+  </header>
+
+  {guide.quickFacts && guide.quickFacts.length > 0 && (
+    <section class="border-b border-palm-900/10 bg-palm-900 py-10 text-white lg:py-12">
+      <div class="mx-auto max-w-5xl px-5 lg:px-8">
+        <p class="text-sm font-black text-gold-400">{t.glance}</p>
+        <dl class="mt-5 grid gap-4 sm:grid-cols-2">
+          {guide.quickFacts.map((fact) => (
+            <div class="rounded-2xl bg-white/5 p-4">
+              <dt class="text-xs font-black text-sand-100/70">{fact.label}</dt>
+              <dd class="mt-1 text-sm font-black leading-7">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  )}
+
+  <section class="bg-sand-50 py-14 lg:py-20">
+    <div class="mx-auto max-w-3xl space-y-10 px-5 lg:px-8">
+      {guide.sections.map((section) => (
+        <div>
+          <h2 class="text-2xl font-black text-palm-900 sm:text-3xl">{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => (
+            <p class="mt-4 leading-9 text-palm-900/78">{paragraph}</p>
+          ))}
+          {section.bullets && section.bullets.length > 0 && (
+            <ul class="mt-5 space-y-3">
+              {section.bullets.map((bullet) => (
+                <li class="flex gap-3 leading-8 text-palm-900/78">
+                  <span class="mt-3 h-2 w-2 flex-none rounded-full bg-gold-400" aria-hidden="true"></span>
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-palm-900/10 bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-3xl px-5 lg:px-8">
+      <h2 class="text-3xl font-black text-palm-900">{t.faqHeading}</h2>
+      <div class="mt-8 space-y-4">
+        {guide.faqs.map((faq) => (
+          <details class="group rounded-3xl border border-palm-900/10 bg-sand-50 p-6 open:shadow-sm">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-5 font-black text-palm-900">
+              <span>{faq.q}</span>
+              <span class="text-gold-600 transition group-open:rotate-45">＋</span>
+            </summary>
+            <p class="mt-4 border-t border-palm-900/10 pt-4 text-sm leading-8 text-palm-900/68">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-palm-900/10 bg-sand-50 py-12">
+    <div class="mx-auto max-w-3xl px-5 lg:px-8">
+      <div class="rounded-3xl border border-gold-400/40 bg-gold-400/10 p-5 text-sm leading-8 text-palm-900/80">
+        <strong class="font-black">{t.methodStrong}</strong> {t.methodText}
+        {' '}<a class="font-black text-palm-900 underline" href={t.methodLinkHref}>{t.methodLink}</a>.
+      </div>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="rounded-full bg-palm-900 px-5 py-3 text-sm font-black text-white no-underline hover:bg-palm-700" href={PARK.mapsUrl} target="_blank" rel="noopener noreferrer">{t.directions}</a>
+        <a class="rounded-full border border-palm-900/20 bg-white px-5 py-3 text-sm font-black text-palm-900 no-underline hover:border-gold-400" href={t.hubHref}>{t.allGuides}</a>
+      </div>
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="border-t border-palm-900/10 bg-white py-14 lg:py-20">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8">
+        <h2 class="text-3xl font-black text-palm-900">{t.relatedHeading}</h2>
+        <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {related.map((item) => <GuideCard guide={item} lang={lang} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</article>
