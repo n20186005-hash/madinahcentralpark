@@ -14,7 +14,7 @@ import { CATEGORIES, englishGuides } from '../../data/guides';
 
 const siteUrl = Astro.site ? new URL('/en/', Astro.site).href : undefined;
 const arSiteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
-const heroUrl = Astro.site ? new URL('/images/park-concept.svg', Astro.site).href : undefined;
+const heroUrl = Astro.site ? new URL('/images/king-fahd-central-park-hero.jpg', Astro.site).href : undefined;
 const entityId = siteUrl ? `${siteUrl}#king-fahad-central-park` : undefined;
 
 const alternates = [
@@ -229,8 +229,8 @@ const categories = CATEGORIES.map((category) => ({
   <section class="relative isolate overflow-hidden bg-night-950 text-white">
     <div class="park-hero-background absolute inset-0 z-0">
       <div class="photo-frame h-full w-full">
-        <div class="photo-fallback"><span class="max-w-md text-sm leading-7 opacity-85">An original illustration, not a photograph of the site.</span></div>
-        <img src="/images/park-concept.svg" alt="An original conceptual illustration of an urban park; not a photograph of the site" width="1600" height="900" fetchpriority="high" onerror="this.style.display='none'" />
+        <div class="photo-fallback"><span class="max-w-md text-sm leading-7 opacity-85">A real photograph of King Fahad Central Park, stored locally when the licensed image file is available.</span></div>
+        <img src="/images/king-fahd-central-park-hero.jpg" alt="Green spaces and trees at King Fahad Central Park in Madinah" width="1600" height="900" fetchpriority="high" onerror="this.style.display='none'" />
       </div>
       <div class="absolute inset-0 z-10 bg-gradient-to-l from-night-950/96 via-night-950/70 to-palm-900/30"></div>
       <div class="absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-night-950 to-transparent"></div>
@@ -386,6 +386,41 @@ const categories = CATEGORIES.map((category) => ({
   <Itineraries lang="en" />
 
   <VisitorResponsibility lang="en" />
+
+  <section class="bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-black text-gold-600">Snapshots from the park</p>
+        <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">Photos that reflect the atmosphere of the place</h2>
+      </div>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>Photo of the green spaces</span></div><img src="/images/king-fahd-central-park-hero.jpg" alt="Green spaces and trees at King Fahad Central Park" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">Trees and lawns</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">Green areas suited to a quiet stroll and family seating away from the main road traffic.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>Photo of a fountain inside the park</span></div><img src="/images/king-fahd-central-park-fountain.jpg" alt="Fountains and water features at King Fahad Central Park" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">Water features</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">Fountains and water elements that help cool the air and decorate the paths inside the park.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>Photo of the children's play area</span></div><img src="/images/king-fahd-central-park-playground.jpg" alt="A children's play area at King Fahad Central Park" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">Children's play areas</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">Spaces dedicated to children's play and supervision, and they are mentioned among the park's facilities in municipal sources.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>Photo of the walkway and circulation paths</span></div><img src="/images/king-fahd-central-park-walkway.jpg" alt="A walkway and pedestrian path inside King Fahad Central Park" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">The walkway and circulation paths</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">Routes suited to walking, running and cycling among the park facilities mentioned locally.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>Photo of the park in the evening</span></div><img src="/images/king-fahd-central-park-evening.jpg" alt="Evening atmosphere at King Fahad Central Park" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">Evening atmosphere</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">A good time for a family walk when the daytime heat drops and the paths are lit.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>Photo of the park entrance</span></div><img src="/images/king-fahd-central-park-entrance.jpg" alt="The entrance to King Fahad Central Park in Madinah" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">Park entrances</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">Main entrances in the Al Hadiqah district leading to the lawns and inner facilities, and linked to the nearby parking areas.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
 
   <section class="bg-white py-16 lg:py-24"><figure class="mx-auto max-w-4xl px-5"><h2 class="text-3xl font-black">A conceptual illustration of an urban park</h2><img class="mt-6 w-full rounded-3xl" src="/images/park-concept.svg" alt="An original conceptual illustration of an urban park; not a photograph of the site" width="1200" height="800" loading="lazy"/><figcaption class="mt-4 text-sm leading-8">An original work for this guide, October 2026. It does not represent the park or its actual facilities and entrances. Current visitor photos are available through the external place card.</figcaption></figure></section>
 

@@ -14,7 +14,7 @@ import { MAPS_SNAPSHOT, PARK } from '../lib/parkGuide';
 
 const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
 const enSiteUrl = Astro.site ? new URL('/en/', Astro.site).href : undefined;
-const heroUrl = Astro.site ? new URL('/images/park-concept.svg', Astro.site).href : undefined;
+const heroUrl = Astro.site ? new URL('/images/king-fahd-central-park-hero.jpg', Astro.site).href : undefined;
 const entityId = siteUrl ? `${siteUrl}#king-fahad-central-park` : undefined;
 
 const alternates = [
@@ -231,8 +231,8 @@ const graphSchema = siteUrl
   <section class="relative isolate overflow-hidden bg-night-950 text-white">
     <div class="park-hero-background absolute inset-0 z-0">
       <div class="photo-frame h-full w-full">
-        <div class="photo-fallback"><span class="max-w-md text-sm leading-7 opacity-85">رسم توضيحي أصلي، وليس صورة للموقع.</span></div>
-        <img src="/images/park-concept.svg" alt="رسم أصلي توضيحي لحديقة حضرية؛ ليس صورة للموقع" width="1600" height="900" fetchpriority="high" onerror="this.style.display='none'" />
+        <div class="photo-fallback"><span class="max-w-md text-sm leading-7 opacity-85">صورة حقيقية لحديقة الملك فهد المركزية محفوظة محلياً عند توفر ملف الصورة المرخّص.</span></div>
+        <img src="/images/king-fahd-central-park-hero.jpg" alt="المساحات الخضراء والأشجار في حديقة الملك فهد المركزية بالمدينة المنورة" width="1600" height="900" fetchpriority="high" onerror="this.style.display='none'" />
       </div>
       <div class="absolute inset-0 z-10 bg-gradient-to-l from-night-950/96 via-night-950/70 to-palm-900/30"></div>
       <div class="absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-night-950 to-transparent"></div>
@@ -388,6 +388,41 @@ const graphSchema = siteUrl
   <Itineraries />
 
   <VisitorResponsibility />
+
+  <section class="bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-black text-gold-600">لقطات من الحديقة</p>
+        <h2 class="mt-3 text-4xl font-black text-palm-900 sm:text-5xl">صور تعبّر عن أجواء المكان</h2>
+      </div>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة المساحات الخضراء</span></div><img src="/images/king-fahd-central-park-hero.jpg" alt="مساحات خضراء وأشجار في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">الأشجار والمسطحات</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مساحات خضراء مناسبة للتنزه الهادئ والجلوس العائلي بعيداً عن حركة الطرق الرئيسية.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة نافورة داخل الحديقة</span></div><img src="/images/king-fahd-central-park-fountain.jpg" alt="نوافير وعناصر مائية في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">العناصر المائية</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">نوافير وعناصر مائية تسهم في تلطيف الأجواء وتزيين المسارات داخل الحديقة.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة منطقة ألعاب الأطفال</span></div><img src="/images/king-fahd-central-park-playground.jpg" alt="منطقة ألعاب مخصصة للأطفال في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">مناطق ألعاب الأطفال</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مساحات مخصصة لهو الأطفال وإشرافهم، وتُذكر ضمن مرافق الحديقة في المصادر البلدية.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة الممشى ومسارات الحركة</span></div><img src="/images/king-fahd-central-park-walkway.jpg" alt="ممشى ومسار للمشاة داخل حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">الممشى ومسارات الحركة</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">ممرات مناسبة للمشي والجري وركوب الدراجات ضمن مرافق الحديقة المذكورة محلياً.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة الحديقة في المساء</span></div><img src="/images/king-fahd-central-park-evening.jpg" alt="أجواء المساء في حديقة الملك فهد المركزية" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">أجواء المساء</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">وقت مناسب للمشي العائلي عندما تنخفض حرارة النهار وتضاء المسارات.</p></div>
+        </article>
+        <article class="overflow-hidden rounded-[2rem] border border-palm-900/10 bg-sand-50">
+          <div class="photo-frame aspect-[4/3]"><div class="photo-fallback"><span>صورة مدخل الحديقة</span></div><img src="/images/king-fahd-central-park-entrance.jpg" alt="مدخل حديقة الملك فهد المركزية في المدينة المنورة" width="1200" height="900" loading="lazy" onerror="this.style.display='none'" /></div>
+          <div class="p-5"><h3 class="font-black">مداخل الحديقة</h3><p class="mt-2 text-sm leading-7 text-palm-900/60">مداخل رئيسية في حي الحديقة تؤدي إلى المسطحات والمرافق الداخلية، وترتبط بالمواقف القريبة.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
 
   <section class="bg-white py-16 lg:py-24"><figure class="mx-auto max-w-4xl px-5"><h2 class="text-3xl font-black">رسم مفاهيمي لحديقة حضرية</h2><img class="mt-6 w-full rounded-3xl" src="/images/park-concept.svg" alt="رسم أصلي توضيحي لحديقة حضرية؛ ليس صورة للموقع" width="1200" height="800" loading="lazy"/><figcaption class="mt-4 text-sm leading-8">عمل أصلي لهذا الدليل، أكتوبر 2026. لا يمثل الحديقة أو المرافق والمداخل الفعلية. صور الزوار الحالية متاحة عبر بطاقة المكان الخارجية.</figcaption></figure></section>
 
